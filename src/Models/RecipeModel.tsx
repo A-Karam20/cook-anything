@@ -3,7 +3,7 @@ export type Recipe = {
     title : string,
     ingredients : string,
     servings : string,
-    instructions : string
+    instructions : string,
     likes : number,
     dislikes : number,
     isLiked : Boolean,

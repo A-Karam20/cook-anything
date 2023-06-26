@@ -81,7 +81,8 @@ export const ShowRecipes: React.FC<Props> = ({ recipeName, _recipes }) => {
               header={r.title}
               date="June 22, 2023"
               paragraph={r.servings}
-              link={`/readmore/${r.id}`}
+              ingredients={r.ingredients}
+              instructions={r.instructions}
               likes={r.likes}
               dislikes={r.dislikes}
               handleLike={(event: MouseEvent, recipeId: number) => {}}

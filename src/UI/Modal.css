@@ -1,0 +1,113 @@
+.my-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  overflow-y: auto;
+}
+
+.my-modal.show {
+  opacity: 1;
+  visibility: visible;
+  display: block;
+}
+
+.my-modal .modal-dialog {
+  width: 800px;
+  max-width: 95%;
+  background-color: #fff;
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  margin: 30px auto;
+}
+
+.my-modal .modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0.3rem;
+  outline: 0;
+  padding: 1rem;
+}
+
+.my-modal .modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.my-modal .modal-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.my-modal .modal-body {
+  position: relative;
+  flex: 1 1 auto;
+  padding: 15px;
+}
+
+.my-modal .modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 15px;
+  border-top: 1px solid #e9ecef;
+  background-color: #f8f9fa;
+}
+
+.my-modal .close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 1;
+  width: 35px;
+  height: 35px;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.my-modal .close:hover {
+  color: #000;
+  opacity: 1;
+}
+
+.my-modal .close:focus {
+  outline: none;
+}
+
+.my-modal .close:before,
+.my-modal .close:after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: 20px;
+  height: 2px;
+  background-color: #333;
+  content: "";
+}
+
+.my-modal .close:before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.my-modal .close:after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
