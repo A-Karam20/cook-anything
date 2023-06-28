@@ -47,6 +47,12 @@ export const Article: React.FC<Props> = ({ recipeId, header, date, paragraph, li
           </button>
         </div>
 
+        <div className="flex items-center justify-between absolute top-2 right-2">
+      <button className=" hover:bg-green-500 text-white px-3 py-2 rounded-lg">
+      <i className="fas fa-save"></i> Save
+      </button>
+      </div>
+
         <div className="flex items-center justify-end absolute bottom-2 right-4">
           <LikeButton recipeId={recipeId} likes={likes} isLiked={isLiked} handleLike={handleLike} />
           <DislikeButton recipeId={recipeId} dislikes={dislikes} isDisliked={isDisliked} handleDislike={handleDislike} />

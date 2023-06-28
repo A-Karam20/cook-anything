@@ -4,157 +4,88 @@ import Column from "../UI/Column";
 import { DragDropContext, DropResult} from "react-beautiful-dnd";
 import axios from "axios";
 import { ColumnModel } from "../Models/ColumnModel";
-import { Recipe } from "../Models/RecipeModel";
+import { ClientRecipe } from "../Models/RecipeModel";
 
 const Calendar = () => {
 
     type Props = {
-        recipes : Recipe[],
+        recipes : ClientRecipe[],
         columns : ColumnModel[],
         columnOrder : string[]
     }
 
   useEffect( () => {
-        const clientRecipes : Props = {
-          recipes: [{
-            id: "0",
-            title: "Supreme Chicken",
-            ingredients: "Ingredients: rice,chicken,carry,sauce,etc...",
-            servings: "Servings: 4 people",
-            instructions: "Instructions: Just know man",
-            likes: 10,
-            dislikes: 0,
-            isLiked : false,
-            isDisliked : false
+    axios.get(`https://localhost:7242/api/Recipe/$2`)
+    .then(async (response) => {return await response.data})
+    .then((data) => {
+      const recipes : ClientRecipe[] = data.array_recipes;
+      const clientRecipes : Props = {
+        recipes: recipes,
+        columns: [
+          {
+            day: "1",
+            id: "monday",
+            title: "Monday",
+            recipesIds : recipes.filter(recipe => recipe.category === "1").map(r => r.savedRecipeId.toString())
           },
           {
-            id: "1",
-            title: "Supreme Chicken",
-            ingredients: "Ingredients: rice,chicken,carry,sauce,etc...",
-            servings: "Servings: 4 people",
-            instructions: "Instructions: Just know man",
-            likes: 10,
-            dislikes: 0,
-            isLiked : false,
-            isDisliked : false
+              day: "2",
+              id: "tuesday",
+              title: "Tuesday",
+              recipesIds : recipes.filter(recipe => recipe.category === "2").map(r => r.savedRecipeId.toString())
           },
           {
-            id: "2",
-            title: "Supreme Chicken",
-            ingredients: "Ingredients: rice,chicken,carry,sauce,etc...",
-            servings: "Servings: 4 people",
-            instructions: "Instructions: Just know man",
-            likes: 10,
-            dislikes: 0,
-            isLiked : false,
-            isDisliked : false
+              day: "3",
+              id: "wednesday",
+              title: "Wednesday",
+              recipesIds : recipes.filter(recipe => recipe.category === "3").map(r => r.savedRecipeId.toString())
           },
           {
-            id: "3",
-            title: "Supreme Chicken",
-            ingredients: "Ingredients: rice,chicken,carry,sauce,etc...",
-            servings: "Servings: 4 people",
-            instructions: "Instructions: Just know man",
-            likes: 10,
-            dislikes: 0,
-            isLiked : false,
-            isDisliked : false
+              day: "4",
+              id: "thursday",
+              title: "Thursday",
+              recipesIds : recipes.filter(recipe => recipe.category === "4").map(r => r.savedRecipeId.toString())
           },
           {
-            id: "4",
-            title: "Supreme Chicken",
-            ingredients: "Ingredients: rice,chicken,carry,sauce,etc...",
-            servings: "Servings: 4 people",
-            instructions: "Instructions: Just know man",
-            likes: 10,
-            dislikes: 0,
-            isLiked : false,
-            isDisliked : false
+              day: "5",
+              id: "friday",
+              title: "Friday",
+              recipesIds : recipes.filter(recipe => recipe.category === "5").map(r => r.savedRecipeId.toString())
           },
           {
-            id: "5",
-            title: "Supreme Chicken",
-            ingredients: "Ingredients: rice,chicken,carry,sauce,etc...",
-            servings: "Servings: 4 people",
-            instructions: "Instructions: Just know man",
-            likes: 10,
-            dislikes: 0,
-            isLiked : false,
-            isDisliked : false
+              day: "6",
+              id: "saturday",
+              title: "Saturday",
+              recipesIds : recipes.filter(recipe => recipe.category === "6").map(r => r.savedRecipeId.toString())
           },
           {
-            id: "6",
-            title: "Supreme Chicken",
-            ingredients: "Ingredients: rice,chicken,carry,sauce,etc...",
-            servings: "Servings: 4 people",
-            instructions: "Instructions: Just know man",
-            likes: 10,
-            dislikes: 0,
-            isLiked : false,
-            isDisliked : false
+              day: "7",
+              id: "sunday",
+              title: "Sunday",
+              recipesIds : recipes.filter(recipe => recipe.category === "7").map(r => r.savedRecipeId.toString())
           },
-        ],
-          columns: [
-            {
-              day: "1",
-              id: "monday",
-              title: "Monday",
-              recipesIds : ["0"]
-            },
-            {
-                day: "2",
-                id: "tuesday",
-                title: "Tuesday",
-                recipesIds : ["1"]
-            },
-            {
-                day: "3",
-                id: "wednesday",
-                title: "Wednesday",
-                recipesIds : ["2"]
-            },
-            {
-                day: "4",
-                id: "thursday",
-                title: "Thursday",
-                recipesIds : ["3"]
-            },
-            {
-                day: "5",
-                id: "friday",
-                title: "Friday",
-                recipesIds : ["4"]
-            },
-            {
-                day: "6",
-                id: "saturday",
-                title: "Saturday",
-                recipesIds : ["5"]
-            },
-            {
-                day: "7",
-                id: "sunday",
-                title: "Sunday",
-                recipesIds : ["6"]
-            },
-        ],
-        columnOrder: ["0", "1", "2", "3", "4", "5", "6"],
-        };
-        
-        setState(clientRecipes);
+      ],
+      columnOrder: ["0", "1", "2", "3", "4", "5", "6"],
+      };
+      
+      setState(clientRecipes);
+
+    })
+    .catch((error) => {
+      console.log(error);
+    })
   }, []);
   
   const initialData : Props = {
     recipes: [{
       id: "0",
-      title: "Supreme Chicken",
-      ingredients: "Ingredients: rice,chicken,carry,sauce,etc...",
-      servings: "Servings: 4 people",
-      instructions: "Instructions: Just know man",
-      likes: 10,
-      dislikes: 0,
-      isLiked : false,
-      isDisliked : false
+      title: "",
+      ingredients: "",
+      servings: "",
+      instructions: "",
+      category : "1",
+      savedRecipeId : 0,
+      clientId : -1
     },],
     columns: [
       {
@@ -326,7 +257,7 @@ const onDragEnd = (result: DropResult) => {
           {state.columnOrder.map((columnId) => {
             const column = state.columns[parseInt(columnId)];
             const getRecipe = (recipeId : string) => {
-              const arrayOfRecipes= state.recipes.filter((recipe) => recipe.id === recipeId);
+              const arrayOfRecipes= state.recipes.filter((recipe) => recipe.savedRecipeId.toString() === recipeId);
               return arrayOfRecipes[0];
             }
 

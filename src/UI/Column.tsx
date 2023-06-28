@@ -3,13 +3,13 @@ import { Draggable } from 'react-beautiful-dnd';
 import { Droppable } from "react-beautiful-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark} from "@fortawesome/free-solid-svg-icons";
-import { Recipe } from "../Models/RecipeModel";
 import {ColumnModel} from "../Models/ColumnModel";
 import {MouseEvent} from 'react';
+import { ClientRecipe } from "../Models/RecipeModel";
 
 type Props = {
   column : ColumnModel,
-  recipes : Recipe[],
+  recipes : ClientRecipe[],
   onDelete: (event : MouseEvent, recipeId : string) => void
 }
 
@@ -55,7 +55,7 @@ const Column : React.FC<Props> =  ({ column, recipes, onDelete }) => {
             pt="0.5rem" // Add padding to top of tasks
           >
             {recipes.map((recipe, index) => (
-              <Draggable key={recipe.id} draggableId={recipe.id} index={index}>
+              <Draggable key={recipe.savedRecipeId} draggableId={recipe.savedRecipeId.toString()} index={index}>
                 {(draggableProvided, draggableSnapshot) => (
                   <Flex
                     mb="1rem"
