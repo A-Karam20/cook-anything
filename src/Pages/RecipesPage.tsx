@@ -3,6 +3,7 @@ import { serverUrl } from '../Server/ServerUrl';
 import { useState, useEffect, MouseEvent } from 'react';
 import { Recipe } from '../Models/RecipeModel';
 import { Article } from '../UI/Article';
+import { parse } from 'path';
 
 type Props = {
   recipeName: string,
@@ -78,6 +79,7 @@ export const ShowRecipes: React.FC<Props> = ({ recipeName, _recipes }) => {
           recipes?.map((r) => (
             <Article
               key={r.id}
+              recipeId={parseInt(r.id)}
               header={r.title}
               date="June 22, 2023"
               paragraph={r.servings}
@@ -85,6 +87,8 @@ export const ShowRecipes: React.FC<Props> = ({ recipeName, _recipes }) => {
               instructions={r.instructions}
               likes={r.likes}
               dislikes={r.dislikes}
+              isLiked = {r.isLiked}
+              isDisliked = {r.isDisliked}
               handleLike={(event: MouseEvent, recipeId: number) => {}}
               handleDislike={(event: MouseEvent, recipeId: number) => {}}
             ></Article>

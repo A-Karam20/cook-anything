@@ -11,17 +11,19 @@ export const CreateAccount = () => {
     const [nameTaken, setNameTaken] = useState<Boolean>(false);
 
     const handleClick : MouseEventHandler = (event) => {
+        setUsernameError(false);
+        setPasswordError(false);
         event.preventDefault();
         if(username === "") setUsernameError(true);
         if(password === "") setPasswordError(true);
-        if(usernameError === true || passwordError === true) return;
+        if(username === "" || password === "") return;
            
         const client  = {
             username : username,
             password : password
         }
 
-        axios.post(`${serverUrl}/api/CreateAccount`, client)
+        axios.post(`https://localhost:7242/api/CreateAccount`, client)
         .then(async (response) =>  {return await response.data})
         .then((data) =>
         {
@@ -32,6 +34,7 @@ export const CreateAccount = () => {
             setNameTaken(false);
             setUsername("");
             setPassword("");
+            toast.success("Account created");
         })
         .catch((error) => toast.error("An error occured. Please try again"));
     }

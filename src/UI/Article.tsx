@@ -7,6 +7,7 @@ import { Instructions } from "./Instructions";
 import './Modal.css';
 
 type Props = {
+  recipeId : number,
   header: string;
   date: string;
   paragraph: string;
@@ -14,11 +15,13 @@ type Props = {
   instructions : string,
   likes: number;
   dislikes: number;
+  isLiked : Boolean,
+  isDisliked : Boolean,
   handleLike: (event: MouseEvent, recipeId: number) => void;
   handleDislike: (event: MouseEvent, recipeId: number) => void;
 };
 
-export const Article: React.FC<Props> = ({ header, date, paragraph, likes, dislikes, ingredients, instructions, handleLike, handleDislike }) => {
+export const Article: React.FC<Props> = ({ recipeId, header, date, paragraph, likes, dislikes, isLiked, isDisliked, ingredients, instructions, handleLike, handleDislike }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean | undefined>(false);
   const openModal: MouseEventHandler = (event) => {
     event.preventDefault();
@@ -45,8 +48,8 @@ export const Article: React.FC<Props> = ({ header, date, paragraph, likes, disli
         </div>
 
         <div className="flex items-center justify-end absolute bottom-2 right-4">
-          <LikeButton likes={likes} handleLike={handleLike} />
-          <DislikeButton dislikes={dislikes} handleDislike={handleDislike} />
+          <LikeButton recipeId={recipeId} likes={likes} isLiked={isLiked} handleLike={handleLike} />
+          <DislikeButton recipeId={recipeId} dislikes={dislikes} isDisliked={isDisliked} handleDislike={handleDislike} />
         </div>
       </article>
 
@@ -56,8 +59,8 @@ export const Article: React.FC<Props> = ({ header, date, paragraph, likes, disli
           <Button className="close" onClick={closeModal}></Button>
         </Modal.Header>
         <Modal.Body>
-          <Ingredients ingredients = {ingredients} />
-          <Instructions instructions= {instructions} />
+          <Ingredients ingredients = {ingredients} recipeId={recipeId} />
+          <Instructions instructions= {instructions} recipeId={recipeId} />
         </Modal.Body>
       </Modal>
     </>

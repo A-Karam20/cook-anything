@@ -31,6 +31,6 @@ const Articles : Props[] = [
 
 export const ShowUpdates = () => {
     return(
-        Articles.map(a => <Article header={a.header} date={a.date} paragraph={a.paragraph}  ingredients="Antoine" instructions="Just Do It" likes={0} dislikes={0} handleLike={(event: MouseEvent, recipeId: number) => {}} handleDislike={(event: MouseEvent, recipeId: number) => {}}></Article>)
+        Articles.map(a => <Article recipeId={0} isLiked={true} isDisliked={false} header={a.header} date={a.date} paragraph={a.paragraph}  ingredients="Antoine" instructions="Just Do It" likes={0} dislikes={0} handleLike={(event: MouseEvent, recipeId: number) => {}} handleDislike={(event: MouseEvent, recipeId: number) => {}}></Article>)
     );
 }
