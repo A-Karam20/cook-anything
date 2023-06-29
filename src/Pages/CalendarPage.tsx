@@ -5,6 +5,7 @@ import { DragDropContext, DropResult} from "react-beautiful-dnd";
 import axios from "axios";
 import { ColumnModel } from "../Models/ColumnModel";
 import { ClientRecipe } from "../Models/RecipeModel";
+import {toast} from "react-toastify";
 
 const Calendar = () => {
 
@@ -15,7 +16,7 @@ const Calendar = () => {
     }
 
   useEffect( () => {
-    axios.get(`https://localhost:7242/api/Recipe/$2`)
+    axios.get(`https://localhost:7242/api/Calendar/$2`)
     .then(async (response) => {return await response.data})
     .then((data) => {
       const recipes : ClientRecipe[] = data.array_recipes;
@@ -138,12 +139,24 @@ const Calendar = () => {
 
   const handleDelete : (event: MouseEvent , recipeId: string) => void = (event, recipeId) => {
     event.preventDefault();
+    axios.delete(`https://localhost:7242/api/Calendar/$2/$${recipeId}`)
+    .then(async (response) => {
+      return await response.data;
+    })
+    .then((data) => {
+      if(!data) return toast.error("Couldn't delete task");
+    })
+    .catch((error) => {
+      console.log(error);
+      toast.error("An error occured while sending request");
+    })
+
     setState((prevState) => {
       const updatedRecipes = [ ...prevState.recipes ]; // array of tasks
       const updatedColumns = [ ...prevState.columns ]; // object of columns
   
       // Remove the task from the tasks object
-      const indexOfTask = updatedRecipes.findIndex(recipe => recipe.id === recipeId);
+      const indexOfTask = updatedRecipes.findIndex(recipe => recipe.savedRecipeId.toString() === recipeId);
       updatedRecipes.splice(indexOfTask,1);
   
       // Remove the task from all columns
@@ -178,7 +191,6 @@ const onDragEnd = (result: DropResult) => {
   const endColumn = state.columns.find((col) => col.id === destination.droppableId);
 
   if (startColumn === endColumn && startColumn) {
-    console.log("Oyy");
     // If the item is dropped in the same column
     const newRecipeIds = Array.from(startColumn.recipesIds);
     newRecipeIds.splice(source.index, 1);
@@ -203,6 +215,23 @@ const onDragEnd = (result: DropResult) => {
 
     setState(newState);
   } else if (startColumn && endColumn) {
+    const patchTask = {
+      recipeId : result.draggableId,
+      clientId : 2,
+      category : endColumn.day
+    };
+    axios.patch('https://localhost:7242/api/Calendar/$2', patchTask)
+    .then(async (response) => {
+      return await response.data;
+    })
+    .then((data) => {
+      if(!data) return toast.error("Couldn't update task");
+    })
+    .catch((error) => {
+      console.log(error);
+      toast.error("An error occured while sending request");
+    })
+
     const startRecipeIds = Array.from(startColumn.recipesIds);
     startRecipeIds.splice(source.index, 1);
     const newStartColumn = {

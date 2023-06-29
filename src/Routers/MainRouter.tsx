@@ -1,10 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
-import  HomeNavBar from "../NavigationBar/MainPage";
+import  HomeNavBar from "../NavigationBar/HomeNavBar";
 import { LogIn } from "../Account/LogIn";
 import { CreateAccount } from "../Account/CreateAccount";
 import { AboutUs } from "../AboutUs/aboutUs";
-import ClientNavBar from "../NavigationBar/ClientPage";
+import ClientNavBar from "../Pages/ClientPage";
 import Calendar from "../Pages/CalendarPage";
+import CalendarNavBar from "../NavigationBar/CalendarNavBar";
 
 export const mainRouter = () => {
     return createBrowserRouter([
@@ -37,6 +38,7 @@ export const mainRouter = () => {
         {
             path: "/LogIn/Calendar",
             element : <>
+            <CalendarNavBar/>
             <Calendar/>
             </>
         }

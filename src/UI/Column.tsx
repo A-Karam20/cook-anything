@@ -79,7 +79,7 @@ const Column : React.FC<Props> =  ({ column, recipes, onDelete }) => {
                       {recipe.title}</Text>
                     <FontAwesomeIcon
                       icon={faXmark}
-                      onClick={(event) => handleDelete(event , recipe.id)}
+                      onClick={(event) => handleDelete(event , recipe.savedRecipeId.toString())}
                       style={{ marginLeft: "auto", cursor: "pointer" }}
                     />
                   </Flex>

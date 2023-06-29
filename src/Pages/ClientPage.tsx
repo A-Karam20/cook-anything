@@ -1,6 +1,6 @@
 import {useState, MouseEventHandler, useEffect, MouseEvent} from 'react'
 import { FaSearch } from 'react-icons/fa';
-import { SideBar } from './SideBarContent';
+import { SideBar } from '../NavigationBar/SideBarContent';
 import { Recipe } from '../Models/RecipeModel';
 import { serverUrl } from '../Server/ServerUrl';
 import axios from 'axios';
@@ -54,7 +54,6 @@ function ClientNavBar() {
     } else {
       setInputIsEmpty(true);
     }
-    setClientInput("");
     setSearchBarVisible(!isSearchBarVisible);
   };
 
@@ -87,7 +86,7 @@ function ClientNavBar() {
       });
 
       const object = {
-        state : {state}
+        StateValue : {state}
       }
 
       axios.patch(`https://localhost:7242/api/Recipe/$2/$11`, object)
