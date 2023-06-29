@@ -1,4 +1,4 @@
-import { Article } from "../UI/Article";
+import { Article } from "../Components/Article";
 import React, { MouseEvent } from 'react';
 
 type Props = {

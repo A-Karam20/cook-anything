@@ -1,4 +1,4 @@
-import  {Header}  from "../UI/Header";
+import  {Header}  from "../Components/Header";
 import { ShowUpdates } from "./Updates";
 
 export const AboutUs = () => {

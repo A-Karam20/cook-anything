@@ -1,6 +1,6 @@
 import { useState, MouseEvent, useEffect } from "react";
 import { Flex, Heading } from "@chakra-ui/react";
-import Column from "../UI/Column";
+import Column from "../Components/Column";
 import { DragDropContext, DropResult} from "react-beautiful-dnd";
 import axios from "axios";
 import { ColumnModel } from "../Models/ColumnModel";

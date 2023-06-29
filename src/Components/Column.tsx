@@ -4,8 +4,11 @@ import { Droppable } from "react-beautiful-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark} from "@fortawesome/free-solid-svg-icons";
 import {ColumnModel} from "../Models/ColumnModel";
-import {MouseEvent} from 'react';
+import {MouseEvent, MouseEventHandler, useState} from 'react';
 import { ClientRecipe } from "../Models/RecipeModel";
+import { Button, Modal } from "react-bootstrap";
+import { Ingredients } from "./Ingredients";
+import { Instructions } from "./Instructions";
 
 type Props = {
   column : ColumnModel,
@@ -16,6 +19,16 @@ type Props = {
 const Column : React.FC<Props> =  ({ column, recipes, onDelete }) => {
   const handleDelete = (event : MouseEvent, recipeId : string) => {
     onDelete(event, recipeId);
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean | undefined>(false);
+  const openModal: MouseEventHandler = (event) => {
+    event.preventDefault();
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
   
   return (
@@ -55,6 +68,7 @@ const Column : React.FC<Props> =  ({ column, recipes, onDelete }) => {
             pt="0.5rem" // Add padding to top of tasks
           >
             {recipes.map((recipe, index) => (
+              <div key={recipe.savedRecipeId}>
               <Draggable key={recipe.savedRecipeId} draggableId={recipe.savedRecipeId.toString()} index={index}>
                 {(draggableProvided, draggableSnapshot) => (
                   <Flex
@@ -75,7 +89,7 @@ const Column : React.FC<Props> =  ({ column, recipes, onDelete }) => {
                     {...draggableProvided.draggableProps}
                     {...draggableProvided.dragHandleProps}
                   >
-                    <Text fontSize="17px" color="black"  fontFamily="Arial,sans-serif">
+                    <Text onClick={openModal} fontSize="15px" color="black"  fontFamily="Arial,sans-serif">
                       {recipe.title}</Text>
                     <FontAwesomeIcon
                       icon={faXmark}
@@ -85,6 +99,17 @@ const Column : React.FC<Props> =  ({ column, recipes, onDelete }) => {
                   </Flex>
                 )}
               </Draggable>
+              <Modal show={isModalOpen} onHide={closeModal} size="lg" scrollable className="my-modal">
+              <Modal.Header closeButton>
+                <Modal.Title>{recipe.title}</Modal.Title>
+                <Button className="close" onClick={closeModal}></Button>
+              </Modal.Header>
+              <Modal.Body>
+                <Ingredients ingredients = {recipe.ingredients} recipeId={parseInt(recipe.id)} />
+                <Instructions instructions= {recipe.instructions} recipeId={parseInt(recipe.id)} />
+              </Modal.Body>
+            </Modal>
+              </div>       
             ))}
             {droppableProvided.placeholder}
           </Flex>

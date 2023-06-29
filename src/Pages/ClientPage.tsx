@@ -6,7 +6,7 @@ import { serverUrl } from '../Server/ServerUrl';
 import axios from 'axios';
 import { Client } from '../Models/ClientModel';
 import { toast } from 'react-toastify';
-import { Article } from '../UI/Article';
+import { Article } from '../Components/Article';
 
 function ClientNavBar() {
   const clientString = localStorage.getItem('Client');
@@ -78,7 +78,7 @@ function ClientNavBar() {
 
           }  else if (!isLiked && !isDisliked) {
             recipe.likes--;
-            state = "";
+            state = "-1";
           }
         }
 
@@ -89,7 +89,7 @@ function ClientNavBar() {
         StateValue : {state}
       }
 
-      axios.patch(`https://localhost:7242/api/Recipe/$2/$11`, object)
+      axios.patch(`https://localhost:7242/api/Recipe/$2/$${recipeId}/$${state}`, {})
         .then(async (response) => {
           return await response.data;
         })
@@ -127,7 +127,7 @@ function ClientNavBar() {
 
           }  else if (!isLiked && !isDisliked) {
             recipe.dislikes--;
-            state = "";
+            state = "-1";
           }
         }
 
@@ -138,7 +138,7 @@ function ClientNavBar() {
         state : {state}
       }
 
-      axios.patch('https://localhost:7242/api/Recipe/$2/$11', object)
+      axios.patch(`https://localhost:7242/api/Recipe/$2/$${recipeId}/$${state}`, {})
         .then(async (response) => {
           return await response.data;
         })
