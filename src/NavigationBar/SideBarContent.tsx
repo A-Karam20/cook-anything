@@ -16,7 +16,7 @@ export const SideBar : React.FC<Props> = ({isSideBarOpen}) => {
     console.log(isSideBarOpen);
     
     return(
-        <div className={`bg-green-400 text-black w-64 px-4 py-20 shadow-md ${isSideBarOpen ? 'block' : 'hidden'}`} style={{ boxShadow: "2px 0px 8px rgba(0, 0, 0, 0.2)" }}>
+        <div className={`bg-green-400 text-black w-64 px-4 py-20 shadow-md ${isSideBarOpen ? 'block' : 'hidden'}`} style={{ boxShadow: "2px 0px 8px rgba(0, 0, 0, 0.2)"}}>
     {/* Sidebar content goes here */}
     <ul className="flex flex-col justify-center">
       <a href="/login/calendar" className={linkClassName("calendar")} onClick={(e) => {setActiveLink("calendar")}}>

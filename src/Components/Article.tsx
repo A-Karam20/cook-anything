@@ -86,11 +86,11 @@ const saveRecipeRequest : MouseEventHandler= (event) => {
 
   return (
     <>
-      <article className="bg-white p-6 rounded-lg shadow-md relative">
+      <article className="bg-white p-6 rounded-lg shadow-md relative mt-7">
         <div className="relative">
           <h2 className="text-xl font-bold mb-2">{header}</h2>
           <p className="text-gray-600 mb-4">
-            Published <span className="font-semibold"></span> by{" "}
+            Published on <span className="font-semibold">{date}</span> by{" "}
             <span className="font-semibold">Antoine Karam</span>
           </p>
           <p className="text-gray-800">{paragraph}</p>

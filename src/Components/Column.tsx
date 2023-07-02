@@ -22,8 +22,7 @@ const Column : React.FC<Props> =  ({ column, recipes, onDelete }) => {
   };
 
   const [isModalOpen, setIsModalOpen] = useState<boolean | undefined>(false);
-  const openModal: MouseEventHandler = (event) => {
-    event.preventDefault();
+  const openModal = () => {
     setIsModalOpen(true);
   };
 

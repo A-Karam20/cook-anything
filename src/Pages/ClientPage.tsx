@@ -7,6 +7,11 @@ import axios from 'axios';
 import { Client } from '../Models/ClientModel';
 import { toast } from 'react-toastify';
 import { Article } from '../Components/Article';
+import { FaFilter } from 'react-icons/fa';
+import { filter_A_Z } from '../FilteringMethods/Filter_A-Z';
+import { filter_Z_A } from '../FilteringMethods/Filter-Z_A';
+import { filter_Top_Likes } from '../FilteringMethods/Filter_TopLikes';
+import { filter_Top_Dislikes } from '../FilteringMethods/Filter_TopDislikes';
 
 function ClientNavBar() {
   const clientString = localStorage.getItem('Client');
@@ -16,8 +21,15 @@ function ClientNavBar() {
   const [clientInput, setClientInput] = useState<string>("");
   const [inputIsEmpty, setInputIsEmpty] = useState<Boolean>(true);
   const [recipes, setRecipes] = useState<Recipe[]>();
+  const [currentRecipes, setCurrentRecipes] = useState<Recipe[]>();
+  const [min, setMin] = useState<number>(0);
+  const [max, setMax] = useState<number>(0);
   const [notFound, setNotFound] = useState<Boolean>(false);
   const [searchClicked, setSearchClicked] = useState<Boolean>(false);
+  const [isNextDisabled, setIsNextDisabled] = useState<boolean | undefined>(false);
+  const [isPreviousDisabled, setIsPreviousDisabled] = useState<boolean | undefined>(true);
+  const [sortBy, setSortBy] = useState<string>('');
+  const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>();
 
   const toggleSidebar : MouseEventHandler = (event) => {
     event.preventDefault();
@@ -43,7 +55,22 @@ function ClientNavBar() {
           if (!data) {
             setNotFound(true);
           } else {
+            setSortBy('');
+            setFilteredRecipes(undefined);
             setRecipes(data.array_recipes);
+            console.log(data.array_recipes.length + "...");
+            setIsPreviousDisabled(true);
+            setMin(0);
+            if(9 >data.array_recipes.length)
+            {
+              setIsNextDisabled(true);
+              setMax(data.array_recipes.length);
+            }
+            else
+            {
+              setIsNextDisabled(false);
+              setMax(9);
+            }
           }
         })
         .catch(error => setNotFound(true))
@@ -56,6 +83,33 @@ function ClientNavBar() {
     }
     setSearchBarVisible(!isSearchBarVisible);
   };
+
+  useEffect(() => {
+    console.log(max);
+    console.log("UseEffect entered");
+    if(filteredRecipes && recipes)
+    {
+      console.log("YESSSSSSSSS");
+      const _currentRecipes : Recipe[] = [];
+            for(let i=min; i<max; i++)
+            {
+              console.log(filteredRecipes[i]);
+              _currentRecipes.push(filteredRecipes[i]);
+            }            
+            setCurrentRecipes(_currentRecipes);
+    }
+    else if(recipes)
+    {
+      console.log("NOOOOOOOOO");
+      const _currentRecipes : Recipe[] = [];
+            for(let i=min; i<max; i++)
+            {
+              console.log(recipes[i]);
+              _currentRecipes.push(recipes[i]);
+            }            
+            setCurrentRecipes(_currentRecipes);
+    }
+  }, [max, filteredRecipes]);
 
   const handleLike: (event: MouseEvent , recipeId: string) => void = async (event, recipeId) => {
     event.preventDefault();  
@@ -95,7 +149,7 @@ function ClientNavBar() {
         })
         .then((data) => {
           if (!data) {
-            toast.error("Couldn't find task");
+            toast.error("Couldn't find recipe");
           }
         })
         .catch((error) => {
@@ -144,7 +198,7 @@ function ClientNavBar() {
         })
         .then((data) => {
           if (!data) {
-            toast.error("Couldn't find task");
+            toast.error("Couldn't find recipe");
           }
         })
         .catch((error) => {
@@ -157,6 +211,42 @@ function ClientNavBar() {
       //const client: Client = JSON.parse(clientString);
   };
 
+  const handlePrevious : MouseEventHandler = (event) => {
+    event.preventDefault();
+    setMax(min);
+    if(recipes)
+    {
+      if(min - 9 > 0)
+      {
+        setMin(min - 9);
+      }
+      else
+      {
+        setIsPreviousDisabled(true);
+        setMin(0);
+      }
+      setIsNextDisabled(false);
+    }
+  }
+
+  const handleNext : MouseEventHandler = (event) => {
+    event.preventDefault();
+    setMin(max);
+    if(recipes)
+    {
+      if(max + 9 > recipes.length)
+      {
+        setMax(recipes.length);
+        setIsNextDisabled(true);
+      }
+      else
+      {
+        setMax(max+9);
+      }
+      setIsPreviousDisabled(false);
+    }
+  }
+
   const ShowRecipes: React.FC = () => {
 
     return (
@@ -166,7 +256,7 @@ function ClientNavBar() {
             <p>Tell me honestly... What did you search for? We found nothing.</p>
           ) : (
               
-            recipes?.map((r) => (
+            currentRecipes?.map((r) => (
               <Article
                 key={r.id}
                 recipeId={parseInt(r.id)}
@@ -190,7 +280,7 @@ function ClientNavBar() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
       <SideBar isSideBarOpen={isSideBarOpen} />
       {/* Main content */}
@@ -229,6 +319,82 @@ function ClientNavBar() {
         {/* Main content of the website */}
         {!inputIsEmpty && <ShowRecipes/>}
         {notFound && searchClicked && <p>We couldn't find what you searched for...like really what did you search?</p>}
+        <div className="navigation flex justify-end mr-8">
+        {currentRecipes && !isPreviousDisabled && 
+          <button onClick={handlePrevious} disabled={isPreviousDisabled} className="previous-button bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-l">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-5 w-5">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          Previous
+        </button>}
+          {currentRecipes && !isNextDisabled && 
+          <button onClick={handleNext} disabled={isNextDisabled} className="next-button bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-r">
+          Next
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-5 w-5">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>}
+      </div>
+      {currentRecipes && 
+      <div className="fixed top-20 mt-10 right-4">
+        <label className="mr-5" htmlFor="sort-by">Sort By:</label>
+      <select
+        id="sort-by"
+        value={sortBy}
+        onChange={(e) => {
+          setSortBy(e.target.value);
+          setFilteredRecipes(():Recipe[] | undefined => {
+            switch(e.target.value)
+            {
+              case "1":
+                console.log("case 1");
+                return filter_A_Z(recipes);
+                
+              case "2":
+                console.log("case 2");
+                return filter_Z_A(recipes);
+              case "3":
+                console.log("case 3");
+                return filter_Top_Likes(recipes);
+              case "4":
+                console.log("case 4");
+                return filter_Top_Dislikes(recipes);
+              default :
+              console.log("default (none)");
+                return undefined;
+            }
+          })
+
+          if(recipes)
+          {
+            console.log("It's defined");
+            setIsPreviousDisabled(true);
+            setMin(0);
+            if(9 >recipes.length)
+            {
+              console.log(recipes.length + " length1");
+              setIsNextDisabled(true);
+              setMax(recipes.length);
+            }
+            else
+            {
+              console.log(recipes.length + " length2");
+              setIsNextDisabled(false);
+              setMax(9);
+              console.log(max);
+            }
+          }
+        }}
+        className="border border-gray-300 rounded px-2 py-1"
+      >
+        <option value="">- none -</option>
+        <option value="1">Title: A-Z</option>
+        <option value="2">Title: Z-A</option>
+        <option value="3">Like: From top liked</option>
+        <option value="4">Dislike: From top disliked</option>
+      </select>
+        </div>}
+
       </div>
 
       {/* Button to toggle the sidebar */}
