@@ -28,6 +28,11 @@ function FriendsNavBar() {
           onClick = {(e) => setActiveLink("settings")}>
             Settings
           </a>
+          <a href="/LogIn/SubmitRecipeForm" 
+          className={linkClassName("submitrecipeform")}
+          onClick = {(e) => setActiveLink("submitrecipeform")}>
+            Submit recipe
+          </a>
           <a href="/" 
           className={linkClassName("logout")}
           onClick = {(e) => setActiveLink("logout")}>

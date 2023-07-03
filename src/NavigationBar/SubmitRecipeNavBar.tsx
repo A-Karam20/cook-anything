@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 
-function CalendarNavBar() {  
+function SubmitRecipeNavBar() {  
   const [activeLink, setActiveLink] = useState("");
   const linkClassName = (link : string) => {
     return `text-black ${
@@ -12,11 +12,16 @@ function CalendarNavBar() {
   return (
     <nav className="bg-green-500">
       <div className="flex items-center justify-center h-20">
-      <a href = "/LogIn/Calendar" className="absolute left-5 text-lg font-semibold text-slate-900">My Calendar</a>
+      <a href = "/LogIn/SubmitRecipeForm" className="absolute left-5 text-lg font-semibold text-slate-900">Submit Recipe</a>
           <a href="/LogIn" 
           className={linkClassName("Search Recipes")}
           onClick = {(e) => setActiveLink("Search Recipes")}>
             Search Recipes
+          </a>
+          <a href="/LogIn/Calendar" 
+          className={linkClassName("calendar")}
+          onClick = {(e) => setActiveLink("calendar")}>
+            Calendar
           </a>
           <a href="/LogIn/Friends" 
           className={linkClassName("friends")}
@@ -28,11 +33,6 @@ function CalendarNavBar() {
           onClick = {(e) => setActiveLink("settings")}>
             Settings
           </a>
-          <a href="/LogIn/SubmitRecipeForm" 
-          className={linkClassName("submitrecipeform")}
-          onClick = {(e) => setActiveLink("submitrecipeform")}>
-            Submit recipe
-          </a>
           <a href="/" 
           className={linkClassName("logout")}
           onClick = {(e) => setActiveLink("logout")}>
@@ -43,4 +43,4 @@ function CalendarNavBar() {
   );
 }
 
-export default CalendarNavBar;
+export default SubmitRecipeNavBar;

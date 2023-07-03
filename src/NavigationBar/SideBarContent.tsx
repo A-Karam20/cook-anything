@@ -28,6 +28,9 @@ export const SideBar : React.FC<Props> = ({isSideBarOpen}) => {
       <a href="/login/settings" className={linkClassName("settings")} onClick={(e) => {setActiveLink("settings")}}>
         Settings
       </a>
+      <a href="/LogIn/SubmitRecipeForm" className={linkClassName("submitrecipeform")} onClick = {(e) => setActiveLink("submitrecipeform")}>
+        Submit recipe
+        </a>
       <a href="/" className="text-black hover:bg-gray-700 hover:text-white px-2 py-2 rounded-md text-lg font-sans">
         Log Out
       </a>

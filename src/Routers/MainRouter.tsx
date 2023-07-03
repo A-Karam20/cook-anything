@@ -8,6 +8,8 @@ import Calendar from "../Pages/CalendarPage";
 import CalendarNavBar from "../NavigationBar/CalendarNavBar";
 import FriendsNavBar from "../NavigationBar/FriendsNavBar";
 import { Friends } from "../Pages/FriendsPage";
+import SubmitRecipeNavBar from "../NavigationBar/SubmitRecipeNavBar";
+import { SubmitRecipe } from "../Pages/SubmitRecipePage";
 
 export const mainRouter = () => {
     return createBrowserRouter([
@@ -49,6 +51,13 @@ export const mainRouter = () => {
             element : <>
             <FriendsNavBar/>
             <Friends/>
+            </>
+        },
+        {
+            path: "/LogIn/SubmitRecipeForm",
+            element : <>
+            <SubmitRecipeNavBar/>
+            <SubmitRecipe/>
             </>
         }
     ]);
