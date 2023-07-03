@@ -86,10 +86,8 @@ function ClientNavBar() {
 
   useEffect(() => {
     console.log(max);
-    console.log("UseEffect entered");
     if(filteredRecipes && recipes)
     {
-      console.log("YESSSSSSSSS");
       const _currentRecipes : Recipe[] = [];
             for(let i=min; i<max; i++)
             {
@@ -100,7 +98,6 @@ function ClientNavBar() {
     }
     else if(recipes)
     {
-      console.log("NOOOOOOOOO");
       const _currentRecipes : Recipe[] = [];
             for(let i=min; i<max; i++)
             {
@@ -336,7 +333,7 @@ function ClientNavBar() {
         </button>}
       </div>
       {currentRecipes && 
-      <div className="fixed top-20 mt-10 right-4">
+      <div className={`absolute top-20 mt-10 right-4 ${isSearchBarVisible ? 'translate-y-24' : ''}`}>
         <label className="mr-5" htmlFor="sort-by">Sort By:</label>
       <select
         id="sort-by"
@@ -347,38 +344,29 @@ function ClientNavBar() {
             switch(e.target.value)
             {
               case "1":
-                console.log("case 1");
-                return filter_A_Z(recipes);
-                
+                return filter_A_Z(recipes);       
               case "2":
-                console.log("case 2");
                 return filter_Z_A(recipes);
               case "3":
-                console.log("case 3");
                 return filter_Top_Likes(recipes);
               case "4":
-                console.log("case 4");
                 return filter_Top_Dislikes(recipes);
               default :
-              console.log("default (none)");
                 return undefined;
             }
           })
 
           if(recipes)
           {
-            console.log("It's defined");
             setIsPreviousDisabled(true);
             setMin(0);
             if(9 >recipes.length)
             {
-              console.log(recipes.length + " length1");
               setIsNextDisabled(true);
               setMax(recipes.length);
             }
             else
             {
-              console.log(recipes.length + " length2");
               setIsNextDisabled(false);
               setMax(9);
               console.log(max);

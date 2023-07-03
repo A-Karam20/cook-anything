@@ -6,6 +6,8 @@ import { AboutUs } from "../AboutUs/aboutUs";
 import ClientNavBar from "../Pages/ClientPage";
 import Calendar from "../Pages/CalendarPage";
 import CalendarNavBar from "../NavigationBar/CalendarNavBar";
+import FriendsNavBar from "../NavigationBar/FriendsNavBar";
+import { Friends } from "../Pages/FriendsPage";
 
 export const mainRouter = () => {
     return createBrowserRouter([
@@ -40,6 +42,13 @@ export const mainRouter = () => {
             element : <>
             <CalendarNavBar/>
             <Calendar/>
+            </>
+        },
+        {
+            path: "/LogIn/Friends",
+            element : <>
+            <FriendsNavBar/>
+            <Friends/>
             </>
         }
     ]);
