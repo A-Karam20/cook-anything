@@ -9,9 +9,14 @@ export const Friends = () => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [currentFriendRecipe, setCurrentFriendRecipe] = useState<string[]>([]);
     const [currentClickedFriend, setCurrentClickedFriend] = useState<string>("");
+    const [currentDay, setCurrentDay] = useState<string>("");
 
     useEffect(() => {
-        axios.get(`https://localhost:7242/api/Friends/$2/$listfriends`)
+        axios.get(`https://localhost:7242/api/Friends/$2/$listfriends`, {
+            validateStatus: function (status) {
+              return (status >= 200 && status < 300) || (status === 404)
+            },
+          })
         .then(async (response) => {
             return await response.data;
         })
@@ -28,13 +33,21 @@ export const Friends = () => {
 
     const handleAdd : MouseEventHandler = (event) => {
         event.preventDefault();
-        axios.post(`https://localhost:7242/api/Friends/$2/$${username}`, {})
+        if( (username === "") || (username === null) || (username === undefined) ) return;
+        axios.post(`https://localhost:7242/api/Friends/$2/$${username}`, {} , {
+            validateStatus: function (status) {
+              return (status >= 200 && status < 300) || (status === 404) || (status === 409)
+            },
+          })
         .then(async (response) => {
             return await response.data;
         })
         .then((data) => {
-            if(!data) return toast.warning(`${username} is already your friend`);
-            if(data === "0") return toast.warning("Username not found");
+            if(!data.valid)
+            {
+                if(data.status === 409) return toast.warning(`${username} is already your friend`);
+                if(data.status === 404) return toast.warning(`${username} not found`);
+            }
             
             const _friends : string[] = Array.from(friends);
             _friends.push(username.toLowerCase());
@@ -44,7 +57,7 @@ export const Friends = () => {
         })
         .catch((error) => {
             console.log(error);
-            toast.error("Error in sending request");
+            toast.error("An error occured while sending request");  
         })
     }
 
@@ -52,18 +65,26 @@ export const Friends = () => {
         event.preventDefault();
         const clickedFriend = event.currentTarget.getAttribute("name");
         setCurrentClickedFriend(clickedFriend ? clickedFriend : "");
-        axios.get(`https://localhost:7242/api/Friends/$2/$${clickedFriend}`)
+        axios.get(`https://localhost:7242/api/Friends/$2/$${clickedFriend}`,
+        {
+            validateStatus: function (status) {
+              return (status >= 200 && status < 300) || (status === 404);
+            },
+          })
         .then(async (response) => {
             return await response.data;
         })
         .then((data) => {
-            if(!data) return toast.error("Can't open friend's calendar");
+            setCurrentDay(data.currentDay);
+            
+            if(!data.valid) return;
 
             setCurrentFriendRecipe(data.friendRecipes);
         })
         .catch((error) => {
             console.log(error);
-            toast.error("Can't send request to server");
+            if(error)
+            return toast.error("Couldn't send request");
         })
         setIsModalOpen(true);
     }
@@ -74,9 +95,34 @@ export const Friends = () => {
         setIsModalOpen(false);
     }
 
-    const handleDeleteFriend : MouseEventHandler = (event) => {
+    const handleDelete : MouseEventHandler = (event) => {
         event.preventDefault();
-        const clickedFriend = event.currentTarget.getAttribute("name");
+        if( (username === "") || (username === null) || (username === undefined) ) return;
+        axios.delete(`https://localhost:7242/api/Friends/$2/$${username}`, {
+            validateStatus: function (status) {
+              return (status >= 200 && status < 300) || (status === 404)
+            },
+          })
+        .then(async (response) => {
+            return await response.data;
+        })
+        .then((data) => {
+            if(!data)
+            {
+                return toast.warning(`${username} was not found on your friends list`);
+            }
+            
+            const _friends : string[] = Array.from(friends);
+            const index = _friends.indexOf(username.toLowerCase());
+            _friends.splice(index, 1);
+            setFriends(_friends);
+            toast.success(`${username.toLowerCase()} is no longer your friend`);
+            setUsername("");
+        })
+        .catch((error) => {
+            console.log(error);
+            toast.error("An error occured while sending request");  
+        })
     }
 
     return (
@@ -86,12 +132,13 @@ export const Friends = () => {
                 className = "max-w-[250px] w-full border-2 rounded-lg p-2 outline-none focus:border-[#00dd0b]"
                 value = {username}
                 type = "text"
-                placeholder = "Add friend"
+                placeholder = "Add/Delete friend"
                 onChange = {(e) => setUsername(e.target.value)}
                 maxLength = {15}
                 >
                 </input>
             <button onClick={handleAdd} className="rounded-lg bg-green-300 px-5 py-2 text-white font-bold hover:bg-green-500 transition-colors duration-150 ease-in-out">Add</button>
+            <button onClick={handleDelete} className="rounded-lg bg-green-300 px-5 py-2 text-white font-bold hover:bg-green-500 transition-colors duration-150 ease-in-out">Delete</button>
         </form>
         <div className="bg-gray-100 p-4">
         <h2 className="text-xl font-bold mb-4">Friends List</h2>
@@ -108,24 +155,6 @@ export const Friends = () => {
                 See what's he cooking
             </button>
             </div>
-            <button
-            name={f}
-            className="absolute top-2 right-2 text-red-500"
-            onClick={(event) => handleDeleteFriend(event)}
-            >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-            >
-                <path
-                fillRule="evenodd"
-                d="M10 2a8 8 0 100 16 8 8 0 000-16zm3.293 10.293a1 1 0 01-1.414 1.414L10 11.414l-2.879 2.879a1 1 0 11-1.414-1.414L8.586 10 5.707 7.121a1 1 0 011.414-1.414L10 8.586l2.879-2.879a1 1 0 111.414 1.414L11.414 10l2.879 2.879z"
-                clipRule="evenodd"
-                />
-            </svg>
-            </button>
         </div>
         ))}
         </ul>
@@ -136,8 +165,9 @@ export const Friends = () => {
           <Button className="close" onClick={closeModal}></Button>
         </Modal.Header>
         <Modal.Body>
+        <h2 className="text-2xl font-bold mb-4 mt-4">{currentDay}:</h2>
         <ol className="list-decimal ml-6 space-y-2">
-        {currentFriendRecipe.map(r => <li key={r} className="font-serif pl-2">{r}</li>)}
+        {currentFriendRecipe.length > 0 ? currentFriendRecipe.map(r => <li key={r} className="font-serif pl-2">{r}</li>) : <p className="font-serif pl-2">Well, It seems that your friend is on some diet today.</p>}
         </ol>
         </Modal.Body>
       </Modal>

@@ -1,6 +1,5 @@
 import {MouseEventHandler, useState} from 'react';
 import axios from 'axios';
-import { serverUrl } from '../Server/ServerUrl';
 import {toast} from 'react-toastify';
 
 export const SubmitRecipe = () => {
@@ -21,7 +20,7 @@ export const SubmitRecipe = () => {
             servings : servings
         }
 
-        axios.post(`${serverUrl}/api/SubmitRecipe`, recipe)
+        axios.post(`https://localhost:7242/api/SubmitRecipe/$2`, recipe)
         .then(async (response) =>  {return await response.data})
         .then((data) =>
         {
