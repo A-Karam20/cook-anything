@@ -10,12 +10,16 @@ import FriendsNavBar from "../NavigationBar/FriendsNavBar";
 import { Friends } from "../Pages/FriendsPage";
 import SubmitRecipeNavBar from "../NavigationBar/SubmitRecipeNavBar";
 import { SubmitRecipe } from "../Pages/SubmitRecipePage";
+import { MainPage } from "../Pages/MainPage";
 
 export const mainRouter = () => {
     return createBrowserRouter([
         {
             path: "/",
-            element : <HomeNavBar/>
+            element : <>
+            <HomeNavBar/>
+            <MainPage/>
+            </>
         },
         {
             path: "/login",
