@@ -1,7 +1,6 @@
-import { motion } from "framer-motion";
 import { useState } from "react";
 
-function CalendarNavBar() {  
+function CalendarNavBar() {
   const [activeLink, setActiveLink] = useState("");
   const linkClassName = (link : string) => {
     return `text-black ${
@@ -13,7 +12,7 @@ function CalendarNavBar() {
     <nav className="bg-green-500">
       <div className="flex items-center justify-center h-20">
       <a href = "/LogIn/Calendar" className="absolute left-5 text-lg font-semibold text-slate-900">My Calendar</a>
-          <a href="/LogIn" 
+          <a href="/LogIn/SearchRecipes" 
           className={linkClassName("Search Recipes")}
           onClick = {(e) => setActiveLink("Search Recipes")}>
             Search Recipes

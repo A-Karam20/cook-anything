@@ -2,8 +2,14 @@ import {useState, MouseEventHandler, useEffect} from 'react';
 import axios from 'axios';
 import {toast} from 'react-toastify';
 import { Button, Modal } from 'react-bootstrap';
+import { Client } from '../Models/ClientModel';
 
 export const Friends = () => {
+    const clientJson = localStorage.getItem('Client');
+    const tokenJson = localStorage.getItem('Token');
+    const storedClient : Client = clientJson ? JSON.parse(clientJson) : undefined;
+    const storedToken = tokenJson ? JSON.parse(tokenJson) : undefined;
+
     const [username, setUsername] = useState("");
     const [friends, setFriends] = useState<string[]>([]);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -12,11 +18,15 @@ export const Friends = () => {
     const [currentDay, setCurrentDay] = useState<string>("");
 
     useEffect(() => {
-        axios.get(`https://localhost:7242/api/Friends/$2/$listfriends`, {
+        axios.get(`https://localhost:7242/api/Friends/$${storedClient.id}/$listfriends`, {
             validateStatus: function (status) {
               return (status >= 200 && status < 300) || (status === 404)
             },
-          })
+            headers: {
+                'Authorization': `Bearer ${storedToken}`,
+                'Content-Type': 'application/json'
+              }
+          },)
         .then(async (response) => {
             return await response.data;
         })
@@ -34,10 +44,14 @@ export const Friends = () => {
     const handleAdd : MouseEventHandler = (event) => {
         event.preventDefault();
         if( (username === "") || (username === null) || (username === undefined) ) return;
-        axios.post(`https://localhost:7242/api/Friends/$2/$${username}`, {} , {
+        axios.post(`https://localhost:7242/api/Friends/$${storedClient.id}/$${username}`, {} , {
             validateStatus: function (status) {
               return (status >= 200 && status < 300) || (status === 404) || (status === 409)
             },
+            headers: {
+                'Authorization': `Bearer ${storedToken}`,
+                'Content-Type': 'application/json'
+              }
           })
         .then(async (response) => {
             return await response.data;
@@ -62,22 +76,31 @@ export const Friends = () => {
     }
 
     const openModal : MouseEventHandler = (event) => {
+        console.log("OpenModal eventhandler entered");
         event.preventDefault();
         const clickedFriend = event.currentTarget.getAttribute("name");
         setCurrentClickedFriend(clickedFriend ? clickedFriend : "");
-        axios.get(`https://localhost:7242/api/Friends/$2/$${clickedFriend}`,
+        axios.get(`https://localhost:7242/api/Friends/$${storedClient.id}/$${clickedFriend}`,
         {
             validateStatus: function (status) {
               return (status >= 200 && status < 300) || (status === 404);
             },
+            headers: {
+                'Authorization': `Bearer ${storedToken}`,
+                'Content-Type': 'application/json'
+              }
           })
         .then(async (response) => {
+            console.log("response entered");
             return await response.data;
         })
         .then((data) => {
+            console.log("data entered");
             setCurrentDay(data.currentDay);
             
-            if(!data.valid) return;
+            if(data.valid === false) return;
+
+            console.log(data.friendRecipes);
 
             setCurrentFriendRecipe(data.friendRecipes);
         })
@@ -98,10 +121,14 @@ export const Friends = () => {
     const handleDelete : MouseEventHandler = (event) => {
         event.preventDefault();
         if( (username === "") || (username === null) || (username === undefined) ) return;
-        axios.delete(`https://localhost:7242/api/Friends/$2/$${username}`, {
+        axios.delete(`https://localhost:7242/api/Friends/$${storedClient.id}/$${username}`, {
             validateStatus: function (status) {
               return (status >= 200 && status < 300) || (status === 404)
             },
+            headers: {
+                'Authorization': `Bearer ${storedToken}`,
+                'Content-Type': 'application/json'
+              }
           })
         .then(async (response) => {
             return await response.data;
@@ -144,7 +171,7 @@ export const Friends = () => {
         <h2 className="text-xl font-bold mb-4">Friends List</h2>
         <ul className="flex flex-wrap">
         {friends.map((f) => (
-        <div className="mx-4 bg-white border border-green-300 p-4 rounded-lg flex items-center space-x-4 relative">
+        <div key={f} className="mx-4 bg-white border border-green-300 p-4 rounded-lg flex items-center space-x-4 relative">
             <div>
             <h3 className="text-lg font-semibold">{f}</h3>
             <button

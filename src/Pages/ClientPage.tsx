@@ -2,19 +2,20 @@ import {useState, MouseEventHandler, useEffect, useRef, MouseEvent} from 'react'
 import { FaSearch } from 'react-icons/fa';
 import { SideBar } from '../NavigationBar/SideBarContent';
 import { Recipe } from '../Models/RecipeModel';
-import { serverUrl } from '../Server/ServerUrl';
 import axios from 'axios';
 import { Client } from '../Models/ClientModel';
 import { toast } from 'react-toastify';
 import { Article } from '../Components/Article';
-import { FaFilter } from 'react-icons/fa';
 import { filter_A_Z } from '../FilteringMethods/Filter_A-Z';
 import { filter_Z_A } from '../FilteringMethods/Filter-Z_A';
 import { filter_Top_Likes } from '../FilteringMethods/Filter_TopLikes';
 import { filter_Top_Dislikes } from '../FilteringMethods/Filter_TopDislikes';
 
 function ClientNavBar() {
-  const clientString = localStorage.getItem('Client');
+  const clientJson = localStorage.getItem('Client');
+  const tokenJson = localStorage.getItem('Token');
+  const storedClient : Client = clientJson ? JSON.parse(clientJson) : undefined;
+  const storedToken = tokenJson ? JSON.parse(tokenJson) : undefined;
 
   const [isSideBarOpen, setSidebarOpen] = useState<Boolean>(false);
   const [isSearchBarVisible, setSearchBarVisible] = useState<Boolean>(false);
@@ -48,24 +49,27 @@ function ClientNavBar() {
   };
 
   const handleSearch: MouseEventHandler<HTMLFormElement> = (event) => {
+    console.log(storedToken);
     event.preventDefault();
     setNotFound(false);
     setInputIsEmpty(true);
     if (clientInput !== "") {
       console.log(recipesChanged + "(recipes state)");
-      setRecipesChanged(true);
       setInputIsEmpty(false);
       setSearchClicked(true);
       try {
         console.log(clientInput);
-        axios.get(`https://localhost:7242/api/Recipe/$2/$${clientInput}`)
+        axios.get(`https://localhost:7242/api/Recipe/$${storedClient.id}/$${clientInput}`, {
+          headers: {
+            'Authorization': `Bearer ${storedToken}`,
+          }
+        })
         .then(async (response) => {return await response.data})
         .then((data) => {
           if (!data) {
             setNotFound(true);
           } else {
             setSortBy('');
-            setFilteredRecipes(undefined);
             setRecipes(data.array_recipes);
             console.log(data.array_recipes.length + " (length of response data");
             setIsPreviousDisabled(true);
@@ -80,6 +84,8 @@ function ClientNavBar() {
               setIsNextDisabled(false);
               setMax(9);
             }
+            setFilteredRecipes(undefined);
+            setRecipesChanged(!recipesChanged);
           }
         })
         .catch(error => setNotFound(true))
@@ -107,7 +113,6 @@ function ClientNavBar() {
               _currentRecipes.push(filteredRecipes[i]);
             }            
             setCurrentRecipes(_currentRecipes);
-            setRecipesChanged(false);
     }
     else if(recipes)
     {
@@ -119,7 +124,6 @@ function ClientNavBar() {
               _currentRecipes.push(recipes[i]);
             }            
             setCurrentRecipes(_currentRecipes);
-            setRecipesChanged(false);
     }
   }, [max, filteredRecipes, recipesChanged]);
 
@@ -151,11 +155,12 @@ function ClientNavBar() {
         return recipe;
       });
 
-      const object = {
-        StateValue : {state}
-      }
-
-      axios.patch(`https://localhost:7242/api/Recipe/$2/$${recipeId}/$${state}`, {})
+      axios.patch(`https://localhost:7242/api/Recipe/$${storedClient.id}/$${recipeId}/$${state}`, {}, {
+        headers: {
+          'Authorization': `Bearer ${storedToken}`,
+          'Content-Type': 'application/json'
+        }
+      })
         .then(async (response) => {
           return await response.data;
         })
@@ -200,11 +205,12 @@ function ClientNavBar() {
         return recipe;
       });
 
-      const object = {
-        state : {state}
-      }
-
-      axios.patch(`https://localhost:7242/api/Recipe/$2/$${recipeId}/$${state}`, {})
+      axios.patch(`https://localhost:7242/api/Recipe/$${storedClient.id}/$${recipeId}/$${state}`, {}, {
+        headers: {
+          'Authorization': `Bearer ${storedToken}`,
+          'Content-Type': 'application/json'
+        }
+      })
         .then(async (response) => {
           return await response.data;
         })
@@ -292,7 +298,7 @@ function ClientNavBar() {
   };
 
   /*useEffect(() => {
-    axios.get(`https://localhost:7242/api/RandomRecipes/$2`)
+    axios.get(`https://localhost:7242/api/RandomRecipes/$${storedClient.id}`)
     .then(async (response) => {
       return await response.data;
     })
@@ -471,24 +477,3 @@ function ClientNavBar() {
 }
 
 export default ClientNavBar;
-
-
-/*useEffect(() => {
-      if (searchClicked) {
-        const fetchRecipes = async () => {
-          try {
-            const response = await axios.get(`https://localhost:7242/api/Recipe/$1/$${clientInput}`);
-            const data = response.data;
-            if (!data) {
-              setNotFound(true);
-            } else {
-              setRecipes(data.array_recipes);
-            }
-          } catch (error) {
-            setNotFound(false);
-          }
-        };
-        fetchRecipes();
-        setSearchClicked(false);
-      }
-    }, [clientInput, searchClicked]);*/

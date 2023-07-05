@@ -1,8 +1,14 @@
 import {MouseEventHandler, useState} from 'react';
 import axios from 'axios';
 import {toast} from 'react-toastify';
+import { Client } from '../Models/ClientModel';
 
 export const SubmitRecipe = () => {
+    const clientJson = localStorage.getItem('Client');
+    const tokenJson = localStorage.getItem('Token');
+    const storedClient : Client = clientJson ? JSON.parse(clientJson) : undefined;
+    const storedToken = tokenJson ? JSON.parse(tokenJson) : undefined;
+
     const [title, setTitle] = useState<string>("");
     const [instructions, setInstructions] = useState<string>("");
     const [ingredients, setIngredients] = useState<string>("");
@@ -20,7 +26,11 @@ export const SubmitRecipe = () => {
             servings : servings
         }
 
-        axios.post(`https://localhost:7242/api/SubmitRecipe/$2`, recipe)
+        axios.post(`https://localhost:7242/api/SubmitRecipe/$${storedClient.id}`, recipe, {
+          headers: {
+          'Authorization': `Bearer ${storedToken}`,
+          'Content-Type': 'application/json'
+        }})
         .then(async (response) =>  {return await response.data})
         .then((data) =>
         {

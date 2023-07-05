@@ -7,8 +7,13 @@ import { ColumnModel } from "../Models/ColumnModel";
 import { ClientRecipe } from "../Models/RecipeModel";
 import {toast} from "react-toastify";
 import { initialData } from "../InitialStates/InitialDataRecipe";
+import { Client } from "../Models/ClientModel";
 
 const Calendar = () => {
+  const clientJson = localStorage.getItem('Client');
+  const tokenJson = localStorage.getItem('Token');
+  const storedClient : Client = clientJson ? JSON.parse(clientJson) : undefined;
+  const storedToken = tokenJson ? JSON.parse(tokenJson) : undefined;
 
     type Props = {
         recipes : ClientRecipe[],
@@ -17,7 +22,12 @@ const Calendar = () => {
     }
 
   useEffect( () => {
-    axios.get(`https://localhost:7242/api/Calendar/$2`)
+    axios.get(`https://localhost:7242/api/Calendar/$${storedClient.id}`, {
+      headers: {
+        'Authorization': `Bearer ${storedToken}`,
+        'Content-Type': 'application/json'
+      }
+    })
     .then(async (response) => {return await response.data})
     .then((data) => {
       const recipes : ClientRecipe[] = data.array_recipes;
@@ -82,7 +92,12 @@ const Calendar = () => {
 
   const handleDelete : (event: MouseEvent , recipeId: string) => void = (event, recipeId) => {
     event.preventDefault();
-    axios.delete(`https://localhost:7242/api/Calendar/$2/$${recipeId}`)
+    axios.delete(`https://localhost:7242/api/Calendar/$${storedClient.id}/$${recipeId}`, {
+      headers: {
+        'Authorization': `Bearer ${storedToken}`,
+        'Content-Type': 'application/json'
+      }
+    })
     .then(async (response) => {
       return await response.data;
     })
@@ -163,7 +178,12 @@ const onDragEnd = (result: DropResult) => {
       clientId : 2,
       category : endColumn.day
     };
-    axios.patch('https://localhost:7242/api/Calendar/$2', patchTask)
+    axios.patch(`https://localhost:7242/api/Calendar/$${storedClient.id}`, patchTask, {
+      headers: {
+        'Authorization': `Bearer ${storedToken}`,
+        'Content-Type': 'application/json'
+      }
+    })
     .then(async (response) => {
       return await response.data;
     })

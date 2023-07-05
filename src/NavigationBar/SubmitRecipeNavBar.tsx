@@ -13,7 +13,7 @@ function SubmitRecipeNavBar() {
     <nav className="bg-green-500">
       <div className="flex items-center justify-center h-20">
       <a href = "/LogIn/SubmitRecipeForm" className="absolute left-5 text-lg font-semibold text-slate-900">Submit Recipe</a>
-          <a href="/LogIn" 
+          <a href="/LogIn/SearchRecipes" 
           className={linkClassName("Search Recipes")}
           onClick = {(e) => setActiveLink("Search Recipes")}>
             Search Recipes

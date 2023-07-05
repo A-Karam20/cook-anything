@@ -19,11 +19,10 @@ export const mainRouter = () => {
         },
         {
             path: "/login",
-            /*element : <>
+            element : <>
             <HomeNavBar/>
             <LogIn/>
-            </>*/
-            element : <ClientNavBar/>
+            </>
         },
         {
             path: "/CreateAccount",
@@ -31,6 +30,10 @@ export const mainRouter = () => {
             <HomeNavBar/>
             <CreateAccount/>
             </>
+        },
+        {
+            path: "/Login/SearchRecipes",
+            element : <ClientNavBar/>
         },
         {
             path: "/Aboutus",

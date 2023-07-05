@@ -8,6 +8,7 @@ import axios from "axios";
 import './Modal.css';
 import { ClientRecipe } from "../Models/RecipeModel";
 import {toast} from "react-toastify";
+import { Client } from "../Models/ClientModel";
 
 type Props = {
   recipeId : number,
@@ -25,6 +26,11 @@ type Props = {
 };
 
 export const Article: React.FC<Props> = ({ recipeId, header, date, paragraph, likes, dislikes, isLiked, isDisliked, ingredients, instructions, handleLike, handleDislike }) => {
+  const clientJson = localStorage.getItem('Client');
+  const tokenJson = localStorage.getItem('Token');
+  const storedClient : Client = clientJson ? JSON.parse(clientJson) : undefined;
+  const storedToken = tokenJson ? JSON.parse(tokenJson) : undefined;
+  
   const [isModalOpen, setIsModalOpen] = useState<boolean | undefined>(false);
   const [isSaveButtonClicked, setIsSaveButtonClicked] = useState<boolean>(false);
   const openModal: MouseEventHandler = (event) => {
@@ -58,7 +64,11 @@ const saveRecipeRequest : MouseEventHandler= (event) => {
     category : "-1"
   }
   console.log(event.currentTarget.getAttribute("name"));
-  axios.post(`https://localhost:7242/api/Recipe/$2/$${event.currentTarget.getAttribute("name")}`, recipe)
+  axios.post(`https://localhost:7242/api/Recipe/$${storedClient.id}/$${event.currentTarget.getAttribute("name")}`, recipe, {
+    headers: {
+      'Authorization': `Bearer ${storedToken}`,
+    }
+  })
   .then(async (response) => {
     return await response.data;
   })
