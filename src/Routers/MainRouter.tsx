@@ -11,6 +11,7 @@ import { Friends } from "../Pages/FriendsPage";
 import SubmitRecipeNavBar from "../NavigationBar/SubmitRecipeNavBar";
 import { SubmitRecipe } from "../Pages/SubmitRecipePage";
 import { MainPage } from "../Pages/MainPage";
+import ProtectedRoutes from "../Authorization/ProtectedRoutes";
 
 export const mainRouter = () => {
     return createBrowserRouter([
@@ -36,10 +37,6 @@ export const mainRouter = () => {
             </>
         },
         {
-            path: "/Login/SearchRecipes",
-            element : <ClientNavBar/>
-        },
-        {
             path: "/Aboutus",
             element : <>
             <HomeNavBar/>
@@ -47,25 +44,20 @@ export const mainRouter = () => {
             </>
         },
         {
+            path: "/LogIn/SearchRecipes",
+            element : <ProtectedRoutes/>
+        },
+        {
             path: "/LogIn/Calendar",
-            element : <>
-            <CalendarNavBar/>
-            <Calendar/>
-            </>
+            element : <ProtectedRoutes/>
         },
         {
             path: "/LogIn/Friends",
-            element : <>
-            <FriendsNavBar/>
-            <Friends/>
-            </>
+            element : <ProtectedRoutes/>
         },
         {
             path: "/LogIn/SubmitRecipeForm",
-            element : <>
-            <SubmitRecipeNavBar/>
-            <SubmitRecipe/>
-            </>
+            element : <ProtectedRoutes/>
         }
     ]);
 }
