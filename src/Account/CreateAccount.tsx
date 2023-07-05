@@ -23,13 +23,17 @@ export const CreateAccount = () => {
             password : password
         }
 
-        axios.post(`https://localhost:7242/api/CreateAccount`, client)
+        axios.post(`https://localhost:7242/api/CreateAccount`, client, {
+            validateStatus: function (status) {
+              return (status >= 200 && status < 300) || (status === 409)
+            },
+          })
         .then(async (response) =>  {return await response.data})
         .then((data) =>
         {
             setUsernameError(false);
             setPasswordError(false);
-            if(!data) return setNameTaken(true);
+            if(!data.valid && data.status===409) return setNameTaken(true);
             
             setNameTaken(false);
             setUsername("");

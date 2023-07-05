@@ -4,8 +4,8 @@ import { Droppable } from "react-beautiful-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark} from "@fortawesome/free-solid-svg-icons";
 import {ColumnModel} from "../Models/ColumnModel";
-import {MouseEvent, MouseEventHandler, useState} from 'react';
-import { ClientRecipe } from "../Models/RecipeModel";
+import {MouseEvent, useState} from 'react';
+import { ClientRecipe} from "../Models/RecipeModel";
 import { Button, Modal } from "react-bootstrap";
 import { Ingredients } from "./Ingredients";
 import { Instructions } from "./Instructions";
@@ -22,12 +22,16 @@ const Column : React.FC<Props> =  ({ column, recipes, onDelete }) => {
   };
 
   const [isModalOpen, setIsModalOpen] = useState<boolean | undefined>(false);
-  const openModal = () => {
+  const [currentRecipe, setCurrentRecipe] = useState<ClientRecipe>();
+  const openModal = (event: MouseEvent, recipe : ClientRecipe) => {
+    console.log(recipe.title);
     setIsModalOpen(true);
+    setCurrentRecipe(recipe);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setCurrentRecipe(undefined);
   };
   
   return (
@@ -66,9 +70,9 @@ const Column : React.FC<Props> =  ({ column, recipes, onDelete }) => {
             boxShadow={droppableSnapshot.isDraggingOver ? "0 2px 10px #4caf50" : "unset"} // Set background color of panel
             pt="0.5rem" // Add padding to top of tasks
           >
-            {recipes.map((recipe, index) => (
-              <div key={recipe.savedRecipeId}>
-              <Draggable key={recipe.savedRecipeId} draggableId={recipe.savedRecipeId.toString()} index={index}>
+            {recipes?.map((recipe, index) => (
+              <div key={recipe?.savedRecipeId}>
+              <Draggable key={recipe?.savedRecipeId} draggableId={recipe?.savedRecipeId.toString()} index={index}>
                 {(draggableProvided, draggableSnapshot) => (
                   <Flex
                     mb="1rem"
@@ -88,8 +92,8 @@ const Column : React.FC<Props> =  ({ column, recipes, onDelete }) => {
                     {...draggableProvided.draggableProps}
                     {...draggableProvided.dragHandleProps}
                   >
-                    <Text onClick={openModal} fontSize="15px" color="black"  fontFamily="Arial,sans-serif">
-                      {recipe.title}</Text>
+                    <Text onClick={(event) => {openModal(event, recipe)}} fontSize="15px" color="black"  fontFamily="Arial,sans-serif">
+                      {recipe?.title}</Text>
                     <FontAwesomeIcon
                       icon={faXmark}
                       onClick={(event) => handleDelete(event , recipe.savedRecipeId.toString())}
@@ -98,18 +102,18 @@ const Column : React.FC<Props> =  ({ column, recipes, onDelete }) => {
                   </Flex>
                 )}
               </Draggable>
-              <Modal show={isModalOpen} onHide={closeModal} size="lg" scrollable className="my-modal">
+              </div>       
+            ))}
+            <Modal show={isModalOpen} onHide={closeModal} size="lg" scrollable className="my-modal">
               <Modal.Header closeButton>
-                <Modal.Title>{recipe.title}</Modal.Title>
+                <Modal.Title>{currentRecipe?.title}</Modal.Title>
                 <Button className="close" onClick={closeModal}></Button>
               </Modal.Header>
               <Modal.Body>
-                <Ingredients ingredients = {recipe.ingredients} recipeId={parseInt(recipe.id)} />
-                <Instructions instructions= {recipe.instructions} recipeId={parseInt(recipe.id)} />
+                <Ingredients ingredients = {currentRecipe ? currentRecipe.ingredients : ""} recipeId={parseInt(currentRecipe ? currentRecipe.id : "0")} />
+                <Instructions instructions= {currentRecipe? currentRecipe.instructions : ""} recipeId={parseInt(currentRecipe? currentRecipe.id : "0")} />
               </Modal.Body>
             </Modal>
-              </div>       
-            ))}
             {droppableProvided.placeholder}
           </Flex>
         )}

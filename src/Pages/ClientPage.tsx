@@ -1,4 +1,4 @@
-import {useState, MouseEventHandler, useEffect, MouseEvent} from 'react'
+import {useState, MouseEventHandler, useEffect, useRef, MouseEvent} from 'react'
 import { FaSearch } from 'react-icons/fa';
 import { SideBar } from '../NavigationBar/SideBarContent';
 import { Recipe } from '../Models/RecipeModel';
@@ -21,6 +21,7 @@ function ClientNavBar() {
   const [clientInput, setClientInput] = useState<string>("");
   const [inputIsEmpty, setInputIsEmpty] = useState<Boolean>(true);
   const [recipes, setRecipes] = useState<Recipe[]>();
+  const [randomRecipes, setRandomRecipes] = useState<Recipe[]>();
   const [currentRecipes, setCurrentRecipes] = useState<Recipe[]>();
   const [min, setMin] = useState<number>(0);
   const [max, setMax] = useState<number>(0);
@@ -31,6 +32,9 @@ function ClientNavBar() {
   const [sortBy, setSortBy] = useState<string>('');
   const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>();
 
+  const [recipesChanged, setRecipesChanged] = useState<boolean>(false);
+  //const inputRef = useRef<HTMLInputElement | null>(null);
+
   const toggleSidebar : MouseEventHandler = (event) => {
     event.preventDefault();
     setSidebarOpen(!isSideBarOpen);
@@ -38,13 +42,18 @@ function ClientNavBar() {
 
   const toggleSearchBar :MouseEventHandler = (event) => {
     event.preventDefault();
+    //console.log(inputRef.current);
+    //if(inputRef.current) inputRef.current.focus();
     setSearchBarVisible(!isSearchBarVisible);
   };
 
-  const handleSearch: MouseEventHandler = (event) => {
+  const handleSearch: MouseEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
     setNotFound(false);
+    setInputIsEmpty(true);
     if (clientInput !== "") {
+      console.log(recipesChanged + "(recipes state)");
+      setRecipesChanged(true);
       setInputIsEmpty(false);
       setSearchClicked(true);
       try {
@@ -58,7 +67,7 @@ function ClientNavBar() {
             setSortBy('');
             setFilteredRecipes(undefined);
             setRecipes(data.array_recipes);
-            console.log(data.array_recipes.length + "...");
+            console.log(data.array_recipes.length + " (length of response data");
             setIsPreviousDisabled(true);
             setMin(0);
             if(9 >data.array_recipes.length)
@@ -77,17 +86,20 @@ function ClientNavBar() {
       } catch (error) {
         setNotFound(true);
       }
-      setSearchClicked(false);
     } else {
+      setRecipesChanged(true);
       setInputIsEmpty(true);
+      setRecipes(randomRecipes);
     }
     setSearchBarVisible(!isSearchBarVisible);
   };
 
   useEffect(() => {
-    console.log(max);
+    console.log("useEffect entered");
+    console.log(recipesChanged + "(recipes state)");
     if(filteredRecipes && recipes)
     {
+      console.log("First condition");
       const _currentRecipes : Recipe[] = [];
             for(let i=min; i<max; i++)
             {
@@ -95,9 +107,11 @@ function ClientNavBar() {
               _currentRecipes.push(filteredRecipes[i]);
             }            
             setCurrentRecipes(_currentRecipes);
+            setRecipesChanged(false);
     }
     else if(recipes)
     {
+      console.log("Second condition");
       const _currentRecipes : Recipe[] = [];
             for(let i=min; i<max; i++)
             {
@@ -105,8 +119,9 @@ function ClientNavBar() {
               _currentRecipes.push(recipes[i]);
             }            
             setCurrentRecipes(_currentRecipes);
+            setRecipesChanged(false);
     }
-  }, [max, filteredRecipes]);
+  }, [max, filteredRecipes, recipesChanged]);
 
   const handleLike: (event: MouseEvent , recipeId: string) => void = async (event, recipeId) => {
     event.preventDefault();  
@@ -276,6 +291,52 @@ function ClientNavBar() {
     );
   };
 
+  /*useEffect(() => {
+    axios.get(`https://localhost:7242/api/RandomRecipes/$2`)
+    .then(async (response) => {
+      return await response.data;
+    })
+    .then((data) => {
+      if(!data) return;
+
+      const _randomRecipes : Recipe[] = data.random_recipes;
+      setRandomRecipes(_randomRecipes);
+      setRecipes(_randomRecipes);
+      console.log(data.random_recipes);
+    })
+    .catch((error) => {
+      console.log(error);
+      toast.error("An error occured while sending request");
+    })
+  }, [])
+
+  const ShowRandomRecipes: React.FC = () => {
+    return (
+      <main className="container mx-auto py-8">
+          <h2 className="text-2xl font-bold mb-4">Random Recipes</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">      
+            {randomRecipes?.map((r) => (
+              <Article
+                key={r.id}
+                recipeId={parseInt(r.id)}
+                header={r.title}
+                date="June 22, 2023"
+                paragraph={r.servings}
+                ingredients={r.ingredients}
+                instructions={r.instructions}
+                likes={r.likes}
+                dislikes={r.dislikes}
+                isLiked={r.isLiked}
+                isDisliked={r.isDisliked}
+                handleLike={(event) => handleLike(event, r.id)}
+                handleDislike={(event) => handleDislike(event, r.id)}
+              ></Article>
+            ))}
+          </div>
+      </main>
+    );
+  };*/
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
@@ -297,19 +358,17 @@ function ClientNavBar() {
         {/* Search bar */}
         {isSearchBarVisible && (
           <div className="px-4 py-2 bg-white">
+            <form onSubmit={handleSearch}>
             <input
               type="text"
               value={clientInput}
               onChange={(e) => setClientInput(e.target.value)}
-              className="border border-gray-300 rounded px-2 py-1 w-full"
+              className="border border-green-500 rounded px-2 py-1 w-full"
               placeholder="Enter your search query"
+              onBlur={() => setSearchBarVisible(false)} 
+              //ref={inputRef}
             />
-            <button
-              onClick={handleSearch}
-              className="bg-green-500 text-white px-4 py-1 mt-2 rounded"
-            >
-              Search
-            </button>
+            </form>
           </div>
         )}
 
@@ -333,7 +392,7 @@ function ClientNavBar() {
         </button>}
       </div>
       {currentRecipes && 
-      <div className={`absolute top-20 mt-10 right-4 ${isSearchBarVisible ? 'translate-y-24' : ''}`}>
+      <div className={`absolute top-20 mt-10 right-4 ${isSearchBarVisible ? 'translate-y-14' : ''}`}>
         <label className="mr-5" htmlFor="sort-by">Sort By:</label>
       <select
         id="sort-by"
