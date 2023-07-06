@@ -17,6 +17,8 @@ type Props = {
 }
 
 const Column : React.FC<Props> =  ({ column, recipes, onDelete }) => {
+  let keyValue : number = 0;
+  
   const handleDelete = (event : MouseEvent, recipeId : string) => {
     onDelete(event, recipeId);
   };
@@ -70,8 +72,7 @@ const Column : React.FC<Props> =  ({ column, recipes, onDelete }) => {
             pt="0.5rem" // Add padding to top of tasks
           >
             {recipes?.map((recipe, index) => (
-              <div key={recipe?.savedRecipeId}>
-              <Draggable key={recipe?.savedRecipeId} draggableId={recipe?.savedRecipeId.toString()} index={index}>
+              <Draggable key={recipe?.savedRecipeId ? recipe.savedRecipeId : keyValue++} draggableId={recipe?.savedRecipeId ? recipe?.savedRecipeId.toString() : keyValue.toString()} index={index}>
                 {(draggableProvided, draggableSnapshot) => (
                   <Flex
                     mb="1rem"
@@ -101,7 +102,6 @@ const Column : React.FC<Props> =  ({ column, recipes, onDelete }) => {
                   </Flex>
                 )}
               </Draggable>
-              </div>       
             ))}
             <Modal show={isModalOpen} onHide={closeModal} size="lg" scrollable className="my-modal">
               <Modal.Header closeButton>

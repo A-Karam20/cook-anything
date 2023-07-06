@@ -173,7 +173,7 @@ const onDragEnd = (result: DropResult) => {
   } else if (startColumn && endColumn) {
     const patchTask = {
       recipeId : result.draggableId,
-      clientId : 2,
+      clientId : storedClient.id,
       category : endColumn.day
     };
     axios.patch(`https://localhost:7242/api/Calendar/$${storedClient.id}`, patchTask, {
