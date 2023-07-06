@@ -3,6 +3,7 @@ import axios from 'axios';
 import {toast} from 'react-toastify';
 import { Button, Modal } from 'react-bootstrap';
 import { Client } from '../Models/ClientModel';
+import { serverUrl } from '../Server/ServerUrl';
 
 export const Friends = () => {
     const clientJson = localStorage.getItem('Client');
@@ -18,7 +19,7 @@ export const Friends = () => {
     const [currentDay, setCurrentDay] = useState<string>("");
 
     useEffect(() => {
-        axios.get(`https://localhost:7242/api/Friends/$${storedClient.id}/$listfriends`, {
+        axios.get(`${serverUrl}/api/Friends/$${storedClient.id}/$listfriends`, {
             validateStatus: function (status) {
               return (status >= 200 && status < 300) || (status === 404)
             },
@@ -43,7 +44,7 @@ export const Friends = () => {
     const handleAdd : MouseEventHandler = (event) => {
         event.preventDefault();
         if( (username === "") || (username === null) || (username === undefined) ) return;
-        axios.post(`https://localhost:7242/api/Friends/$${storedClient.id}/$${username}`, {} , {
+        axios.post(`${serverUrl}/api/Friends/$${storedClient.id}/$${username}`, {} , {
             validateStatus: function (status) {
               return (status >= 200 && status < 300) || (status === 404) || (status === 409)
             },
@@ -77,7 +78,7 @@ export const Friends = () => {
         event.preventDefault();
         const clickedFriend = event.currentTarget.getAttribute("name");
         setCurrentClickedFriend(clickedFriend ? clickedFriend : "");
-        axios.get(`https://localhost:7242/api/Friends/$${storedClient.id}/$${clickedFriend}`,
+        axios.get(`${serverUrl}/api/Friends/$${storedClient.id}/$${clickedFriend}`,
         {
             validateStatus: function (status) {
               return (status >= 200 && status < 300) || (status === 404);
@@ -113,7 +114,7 @@ export const Friends = () => {
     const handleDelete : MouseEventHandler = (event) => {
         event.preventDefault();
         if( (username === "") || (username === null) || (username === undefined) ) return;
-        axios.delete(`https://localhost:7242/api/Friends/$${storedClient.id}/$${username}`, {
+        axios.delete(`${serverUrl}/api/Friends/$${storedClient.id}/$${username}`, {
             validateStatus: function (status) {
               return (status >= 200 && status < 300) || (status === 404)
             },

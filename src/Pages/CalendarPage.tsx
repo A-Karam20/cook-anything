@@ -8,6 +8,7 @@ import { ClientRecipe } from "../Models/RecipeModel";
 import {toast} from "react-toastify";
 import { initialData } from "../InitialStates/InitialDataRecipe";
 import { Client } from "../Models/ClientModel";
+import { serverUrl } from "../Server/ServerUrl";
 
 const Calendar = () => {
   const clientJson = localStorage.getItem('Client');
@@ -22,7 +23,7 @@ const Calendar = () => {
     }
 
   useEffect( () => {
-    axios.get(`https://localhost:7242/api/Calendar/$${storedClient.id}`, {
+    axios.get(`${serverUrl}/api/Calendar/$${storedClient.id}`, {
       headers: {
         'Authorization': `Bearer ${storedToken}`,
         'Content-Type': 'application/json'
@@ -91,7 +92,7 @@ const Calendar = () => {
 
   const handleDelete : (event: MouseEvent , recipeId: string) => void = (event, recipeId) => {
     event.preventDefault();
-    axios.delete(`https://localhost:7242/api/Calendar/$${storedClient.id}/$${recipeId}`, {
+    axios.delete(`${serverUrl}/api/Calendar/$${storedClient.id}/$${recipeId}`, {
       headers: {
         'Authorization': `Bearer ${storedToken}`,
         'Content-Type': 'application/json'
@@ -176,7 +177,7 @@ const onDragEnd = (result: DropResult) => {
       clientId : storedClient.id,
       category : endColumn.day
     };
-    axios.patch(`https://localhost:7242/api/Calendar/$${storedClient.id}`, patchTask, {
+    axios.patch(`${serverUrl}/api/Calendar/$${storedClient.id}`, patchTask, {
       headers: {
         'Authorization': `Bearer ${storedToken}`,
         'Content-Type': 'application/json'

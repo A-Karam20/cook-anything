@@ -10,6 +10,7 @@ import { filter_A_Z } from '../FilteringMethods/Filter_A-Z';
 import { filter_Z_A } from '../FilteringMethods/Filter-Z_A';
 import { filter_Top_Likes } from '../FilteringMethods/Filter_TopLikes';
 import { filter_Top_Dislikes } from '../FilteringMethods/Filter_TopDislikes';
+import { serverUrl } from '../Server/ServerUrl';
 
 function ClientNavBar() {
   const clientJson = localStorage.getItem('Client');
@@ -55,7 +56,7 @@ function ClientNavBar() {
     if (clientInput !== "") {
       setInputIsEmpty(false);
       setSearchClicked(true);
-        axios.get(`https://localhost:7242/api/Recipe/$${storedClient.id}/$${clientInput}`, {
+        axios.get(`${serverUrl}/api/Recipe/$${storedClient.id}/$${clientInput}`, {
           validateStatus: function (status) {
             return (status >= 200 && status < 300) || (status === 404)
           },
@@ -145,7 +146,7 @@ function ClientNavBar() {
         return recipe;
       });
 
-      axios.patch(`https://localhost:7242/api/Recipe/$${storedClient.id}/$${recipeId}/$${state}`, {}, {
+      axios.patch(`${serverUrl}/api/Recipe/$${storedClient.id}/$${recipeId}/$${state}`, {}, {
         headers: {
           'Authorization': `Bearer ${storedToken}`,
           'Content-Type': 'application/json'
@@ -192,7 +193,7 @@ function ClientNavBar() {
         return recipe;
       });
 
-      axios.patch(`https://localhost:7242/api/Recipe/$${storedClient.id}/$${recipeId}/$${state}`, {}, {
+      axios.patch(`${serverUrl}/api/Recipe/$${storedClient.id}/$${recipeId}/$${state}`, {}, {
         headers: {
           'Authorization': `Bearer ${storedToken}`,
           'Content-Type': 'application/json'
@@ -282,7 +283,7 @@ function ClientNavBar() {
   };
 
   /*useEffect(() => {
-    axios.get(`https://localhost:7242/api/RandomRecipes/$${storedClient.id}`)
+    axios.get(`${serverUrl}/api/RandomRecipes/$${storedClient.id}`)
     .then(async (response) => {
       return await response.data;
     })

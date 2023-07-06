@@ -2,6 +2,7 @@ import {MouseEventHandler, useState} from 'react';
 import axios from 'axios';
 import {toast} from 'react-toastify';
 import {useNavigate} from 'react-router-dom';
+import { serverUrl } from '../Server/ServerUrl';
 
 export const LogIn = () => {
     const [username, setUsername] = useState<string>("");
@@ -23,7 +24,7 @@ export const LogIn = () => {
             password : password
         }
 
-        axios.post(`https://localhost:7242/api/LogIn`, client, {
+        axios.post(`${serverUrl}/api/LogIn`, client, {
             validateStatus: function (status) {
                 return (status >= 200 && status < 300) || (status === 404)
               },

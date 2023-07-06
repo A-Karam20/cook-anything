@@ -9,6 +9,7 @@ import '../Styles/Modal.css';
 import { ClientRecipe } from "../Models/RecipeModel";
 import {toast} from "react-toastify";
 import { Client } from "../Models/ClientModel";
+import { serverUrl } from "../Server/ServerUrl";
 
 type Props = {
   recipeId : number,
@@ -63,7 +64,7 @@ const saveRecipeRequest : MouseEventHandler= (event) => {
     savedRecipeId : -1,
     category : "-1"
   }
-  axios.post(`https://localhost:7242/api/Recipe/$${storedClient.id}/$${event.currentTarget.getAttribute("name")}`, recipe, {
+  axios.post(`${serverUrl}/api/Recipe/$${storedClient.id}/$${event.currentTarget.getAttribute("name")}`, recipe, {
     headers: {
       'Authorization': `Bearer ${storedToken}`,
     }

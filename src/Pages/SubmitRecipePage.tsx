@@ -2,6 +2,7 @@ import {MouseEventHandler, useState} from 'react';
 import axios from 'axios';
 import {toast} from 'react-toastify';
 import { Client } from '../Models/ClientModel';
+import { serverUrl } from '../Server/ServerUrl';
 
 export const SubmitRecipe = () => {
     const clientJson = localStorage.getItem('Client');
@@ -26,7 +27,7 @@ export const SubmitRecipe = () => {
             servings : servings
         }
 
-        axios.post(`https://localhost:7242/api/SubmitRecipe/$${storedClient.id}`, recipe, {
+        axios.post(`${serverUrl}/api/SubmitRecipe/$${storedClient.id}`, recipe, {
           headers: {
           'Authorization': `Bearer ${storedToken}`,
           'Content-Type': 'application/json'

@@ -1,6 +1,7 @@
 import {MouseEventHandler, useState} from 'react';
 import axios from 'axios';
 import {toast} from 'react-toastify';
+import { serverUrl } from '../Server/ServerUrl';
 
 export const CreateAccount = () => {
     const [username, setUsername] = useState<string>("");
@@ -22,7 +23,7 @@ export const CreateAccount = () => {
             password : password
         }
 
-        axios.post(`https://localhost:7242/api/CreateAccount`, client, {
+        axios.post(`${serverUrl}/api/CreateAccount`, client, {
             validateStatus: function (status) {
               return (status >= 200 && status < 300) || (status === 409)
             },

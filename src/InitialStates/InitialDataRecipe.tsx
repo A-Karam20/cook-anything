@@ -14,7 +14,7 @@ export const initialData : Props = {
         day: "1",
         id: "0",
         title: "Monday",
-        recipesIds : ["0"]
+        recipesIds : []
       },
       {
         day: "2",
