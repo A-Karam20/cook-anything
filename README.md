@@ -2,7 +2,7 @@
 
 With this app, you can search for recipes, apply filters, save recipes to your calendar, connect with friends to view their daily calendar, submit your own recipes, and much more!
 
-The recipe data is sourced from the API Ninjas website [](https://api-ninjas.com/api/recipe).
+The recipe data is sourced from the API Ninjas website [https://api-ninjas.com/api/recipe](https://api-ninjas.com/api/recipe).
 Additionally, the calendar page in this app is inspired from my previous task-manager project, providing a familiar interface for managing your saved recipes.
 
 Behind the scenes, the API powering this app is built with C# and the ASP.NET framework.
