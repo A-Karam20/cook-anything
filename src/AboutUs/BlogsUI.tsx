@@ -45,7 +45,7 @@ export const Blog: React.FC<BlogModel> = ({header, date, paragraph, readMorePara
         </Modal.Header>
         <Modal.Body className="text-gray-800 text-lg font-medium mb-4 text-justify">
         {readMoreParagraph + " "}
-        {link != "" ? <a className="text-green-500 underline" href={link}>{link}</a> : ""}
+        {link !== "" ? <a className="text-green-500 underline" href={link}>{link}</a> : ""}
         </Modal.Body>
       </Modal>
     </>
