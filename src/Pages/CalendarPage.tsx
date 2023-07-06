@@ -1,6 +1,6 @@
 import { useState, MouseEvent, useEffect } from "react";
 import { Flex, Heading } from "@chakra-ui/react";
-import Column from "../Components/Column";
+import Column from "../Components/UI/Column";
 import { DragDropContext, DropResult} from "react-beautiful-dnd";
 import axios from "axios";
 import { ColumnModel } from "../Models/ColumnModel";
@@ -84,7 +84,6 @@ const Calendar = () => {
 
     })
     .catch((error) => {
-      console.log(error);
     })
   }, []);
 
@@ -105,7 +104,6 @@ const Calendar = () => {
       if(!data) return toast.error("Couldn't delete task");
     })
     .catch((error) => {
-      console.log(error);
       toast.error("An error occured while sending request");
     })
 
@@ -191,7 +189,6 @@ const onDragEnd = (result: DropResult) => {
       if(!data) return toast.error("Couldn't update task");
     })
     .catch((error) => {
-      console.log(error);
       toast.error("An error occured while sending request");
     })
 
@@ -219,7 +216,6 @@ const onDragEnd = (result: DropResult) => {
       return col;
     });
 
-    console.log(updatedColumns);
 
     const newState = {
       ...state,

@@ -3,7 +3,7 @@ import { useState } from "react";
 function CalendarNavBar() {
   const [activeLink, setActiveLink] = useState("");
   const linkClassName = (link : string) => {
-    return `text-black ${
+    return `text-black border border-black ml-5 ${
       activeLink === link ? "bg-gray-700 text-white" : "hover:bg-gray-700 hover:text-white"
     } px-3 py-2 rounded-md text-lg font-sans`
   };
@@ -22,11 +22,6 @@ function CalendarNavBar() {
           onClick = {(e) => setActiveLink("friends")}>
             Friends
           </a>
-          <a href="/LogIn/Settings" 
-          className={linkClassName("settings")}
-          onClick = {(e) => setActiveLink("settings")}>
-            Settings
-          </a>
           <a href="/LogIn/SubmitRecipeForm" 
           className={linkClassName("submitrecipeform")}
           onClick = {(e) => setActiveLink("submitrecipeform")}>
@@ -43,3 +38,10 @@ function CalendarNavBar() {
 }
 
 export default CalendarNavBar;
+
+
+/*<a href="/LogIn/Settings" 
+          className={linkClassName("settings")}
+          onClick = {(e) => setActiveLink("settings")}>
+            Settings
+          </a>*/

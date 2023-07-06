@@ -1,6 +1,5 @@
 import {MouseEventHandler, useState} from 'react';
 import axios from 'axios';
-import { serverUrl } from '../Server/ServerUrl';
 import {toast} from 'react-toastify';
 
 export const CreateAccount = () => {
@@ -10,7 +9,7 @@ export const CreateAccount = () => {
     const [passwordError, setPasswordError] = useState<Boolean>(false);
     const [nameTaken, setNameTaken] = useState<Boolean>(false);
 
-    const handleClick : MouseEventHandler = (event) => {
+    const handleClick : MouseEventHandler<HTMLFormElement> = (event) => {
         setUsernameError(false);
         setPasswordError(false);
         event.preventDefault();
@@ -44,7 +43,7 @@ export const CreateAccount = () => {
     }
 
     return (
-        <form className="w-full flex flex-col items-center p-10 gap-5">
+        <form onSubmit={handleClick} className="w-full flex flex-col items-center p-10 gap-5">
             <h1 className="mb-5 text-2xl font-bold">Sign Up</h1>
                 <input
                 className = "max-w-[250px] w-full border-2 rounded-lg p-3 outline-none focus:border-[#00dd0b]"
@@ -70,7 +69,7 @@ export const CreateAccount = () => {
                 </input>
                 {passwordError && <p className="text-sm text-red-400 font-semibold">This field is required</p>}
 
-            <button className="rounded-lg bg-green-300 px-10 py-3 text-white font-bold hover:bg-green-500 transition-colors duration-150 ease-in-out" onClick={handleClick}>Create</button>
+            <button type="submit" className="rounded-lg bg-green-300 px-10 py-3 text-white font-bold hover:bg-green-500 transition-colors duration-150 ease-in-out">Create</button>
         </form>
     );
 }

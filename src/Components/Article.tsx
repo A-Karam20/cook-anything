@@ -1,11 +1,11 @@
 import { Button, Modal } from "react-bootstrap";
 import React, { MouseEvent, useState, MouseEventHandler } from 'react';
-import { LikeButton } from "./LikeButton";
-import { DislikeButton } from "./DislikeButton";
-import { Ingredients } from "./Ingredients";
-import { Instructions } from "./Instructions";
+import { LikeButton } from "./UI/LikeButton";
+import { DislikeButton } from "./UI/DislikeButton";
+import { Ingredients } from "./UI/Ingredients";
+import { Instructions } from "./UI/Instructions";
 import axios from "axios";
-import './Modal.css';
+import '../Styles/Modal.css';
 import { ClientRecipe } from "../Models/RecipeModel";
 import {toast} from "react-toastify";
 import { Client } from "../Models/ClientModel";
@@ -63,7 +63,6 @@ const saveRecipeRequest : MouseEventHandler= (event) => {
     savedRecipeId : -1,
     category : "-1"
   }
-  console.log(event.currentTarget.getAttribute("name"));
   axios.post(`https://localhost:7242/api/Recipe/$${storedClient.id}/$${event.currentTarget.getAttribute("name")}`, recipe, {
     headers: {
       'Authorization': `Bearer ${storedToken}`,
@@ -78,7 +77,6 @@ const saveRecipeRequest : MouseEventHandler= (event) => {
     if(data) return toast.success("Recipe saved to calendar");
   })
   .catch((error) => {
-    console.log(error);
     toast.error("An error occured while sending request");
     setIsSaveButtonClicked(false);
   })

@@ -36,7 +36,6 @@ export const Friends = () => {
             setFriends(data.friends);
         })
         .catch((error) => {
-            console.log(error);
             toast.error("Error in sending request to server");
         })
     },[])
@@ -70,13 +69,11 @@ export const Friends = () => {
             setUsername("");
         })
         .catch((error) => {
-            console.log(error);
             toast.error("An error occured while sending request");  
         })
     }
 
     const openModal : MouseEventHandler = (event) => {
-        console.log("OpenModal eventhandler entered");
         event.preventDefault();
         const clickedFriend = event.currentTarget.getAttribute("name");
         setCurrentClickedFriend(clickedFriend ? clickedFriend : "");
@@ -91,21 +88,16 @@ export const Friends = () => {
               }
           })
         .then(async (response) => {
-            console.log("response entered");
             return await response.data;
         })
         .then((data) => {
-            console.log("data entered");
             setCurrentDay(data.currentDay);
             
             if(data.valid === false) return;
 
-            console.log(data.friendRecipes);
-
             setCurrentFriendRecipe(data.friendRecipes);
         })
         .catch((error) => {
-            console.log(error);
             if(error)
             return toast.error("Couldn't send request");
         })
@@ -147,7 +139,6 @@ export const Friends = () => {
             setUsername("");
         })
         .catch((error) => {
-            console.log(error);
             toast.error("An error occured while sending request");  
         })
     }

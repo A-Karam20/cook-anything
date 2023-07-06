@@ -49,17 +49,16 @@ function ClientNavBar() {
   };
 
   const handleSearch: MouseEventHandler<HTMLFormElement> = (event) => {
-    console.log(storedToken);
     event.preventDefault();
     setNotFound(false);
     setInputIsEmpty(true);
     if (clientInput !== "") {
-      console.log(recipesChanged + "(recipes state)");
       setInputIsEmpty(false);
       setSearchClicked(true);
-      try {
-        console.log(clientInput);
         axios.get(`https://localhost:7242/api/Recipe/$${storedClient.id}/$${clientInput}`, {
+          validateStatus: function (status) {
+            return (status >= 200 && status < 300) || (status === 404)
+          },
           headers: {
             'Authorization': `Bearer ${storedToken}`,
           }
@@ -67,11 +66,11 @@ function ClientNavBar() {
         .then(async (response) => {return await response.data})
         .then((data) => {
           if (!data) {
+            setRecipes(undefined);
             setNotFound(true);
           } else {
             setSortBy('');
             setRecipes(data.array_recipes);
-            console.log(data.array_recipes.length + " (length of response data");
             setIsPreviousDisabled(true);
             setMin(0);
             if(9 >data.array_recipes.length)
@@ -89,38 +88,30 @@ function ClientNavBar() {
           }
         })
         .catch(error => setNotFound(true))
-      } catch (error) {
-        setNotFound(true);
-      }
     } else {
+      setRecipes(undefined);
       setRecipesChanged(true);
       setInputIsEmpty(true);
-      setRecipes(randomRecipes);
+      //setRecipes(randomRecipes);
     }
     setSearchBarVisible(!isSearchBarVisible);
   };
 
   useEffect(() => {
-    console.log("useEffect entered");
-    console.log(recipesChanged + "(recipes state)");
     if(filteredRecipes && recipes)
     {
-      console.log("First condition");
       const _currentRecipes : Recipe[] = [];
             for(let i=min; i<max; i++)
             {
-              console.log(filteredRecipes[i]);
               _currentRecipes.push(filteredRecipes[i]);
             }            
             setCurrentRecipes(_currentRecipes);
     }
     else if(recipes)
     {
-      console.log("Second condition");
       const _currentRecipes : Recipe[] = [];
             for(let i=min; i<max; i++)
             {
-              console.log(recipes[i]);
               _currentRecipes.push(recipes[i]);
             }            
             setCurrentRecipes(_currentRecipes);
@@ -134,7 +125,6 @@ function ClientNavBar() {
       const updatedRecipes = recipes?.map((recipe) => {
         if (recipe.id === recipeId) {
           recipe.isLiked = !recipe.isLiked;
-          console.log(recipe.isLiked + recipe.id);
           const isLiked : Boolean = recipe.isLiked;
           const isDisliked : Boolean = recipe.isDisliked;
           if (isLiked) {
@@ -173,14 +163,11 @@ function ClientNavBar() {
           toast.error("An error occurred");
         });
   
-      setRecipes(updatedRecipes);
-  
-      //const client: Client = JSON.parse(clientString);
+      setRecipes(updatedRecipes);  
   };
 
   const handleDislike: (event: MouseEvent , recipeId: string) => void = (event, recipeId) => {
     event.preventDefault();
-    //if (clientString != null) {
       let state : string = "";
       const updatedRecipes = recipes?.map((recipe) => {
         if (recipe.id === recipeId) {
@@ -220,13 +207,10 @@ function ClientNavBar() {
           }
         })
         .catch((error) => {
-          console.log(error.message);
           toast.error("An error occurred");
         });
   
-      setRecipes(updatedRecipes);
-  
-      //const client: Client = JSON.parse(clientString);
+      setRecipes(updatedRecipes);  
   };
 
   const handlePrevious : MouseEventHandler = (event) => {
@@ -380,16 +364,15 @@ function ClientNavBar() {
 
         {/* Main content of the website */}
         {!inputIsEmpty && <ShowRecipes/>}
-        {notFound && searchClicked && <p>We couldn't find what you searched for...like really what did you search?</p>}
         <div className="navigation flex justify-end mr-8">
-        {currentRecipes && !isPreviousDisabled && 
+        {!inputIsEmpty && currentRecipes && !isPreviousDisabled && !notFound && 
           <button onClick={handlePrevious} disabled={isPreviousDisabled} className="previous-button bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-l">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-5 w-5">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
           </svg>
           Previous
         </button>}
-          {currentRecipes && !isNextDisabled && 
+          {!inputIsEmpty && currentRecipes && !isNextDisabled && !notFound && 
           <button onClick={handleNext} disabled={isNextDisabled} className="next-button bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-r">
           Next
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-5 w-5">
@@ -397,7 +380,7 @@ function ClientNavBar() {
           </svg>
         </button>}
       </div>
-      {currentRecipes && 
+      {!inputIsEmpty && currentRecipes && !notFound && 
       <div className={`absolute top-20 mt-10 right-4 ${isSearchBarVisible ? 'translate-y-14' : ''}`}>
         <label className="mr-5" htmlFor="sort-by">Sort By:</label>
       <select
@@ -434,7 +417,6 @@ function ClientNavBar() {
             {
               setIsNextDisabled(false);
               setMax(9);
-              console.log(max);
             }
           }
         }}

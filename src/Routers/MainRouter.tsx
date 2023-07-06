@@ -1,17 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 import  HomeNavBar from "../NavigationBar/HomeNavBar";
-import { LogIn } from "../Account/LogIn";
 import { CreateAccount } from "../Account/CreateAccount";
-import { AboutUs } from "../AboutUs/aboutUs";
-import ClientNavBar from "../Pages/ClientPage";
-import Calendar from "../Pages/CalendarPage";
-import CalendarNavBar from "../NavigationBar/CalendarNavBar";
-import FriendsNavBar from "../NavigationBar/FriendsNavBar";
-import { Friends } from "../Pages/FriendsPage";
-import SubmitRecipeNavBar from "../NavigationBar/SubmitRecipeNavBar";
-import { SubmitRecipe } from "../Pages/SubmitRecipePage";
+import { AboutUs } from "../AboutUs/AboutUsPage";
 import { MainPage } from "../Pages/MainPage";
-import ProtectedRoutes from "../Authorization/ProtectedRoutes";
+import ProtectedRoutes from "../Components/Authorization/ProtectedRoutes";
+import LoginChecking from "../Components/Authorization/LogInChecking";
 
 export const mainRouter = () => {
     return createBrowserRouter([
@@ -24,10 +17,7 @@ export const mainRouter = () => {
         },
         {
             path: "/login",
-            element : <>
-            <HomeNavBar/>
-            <LogIn/>
-            </>
+            element : <LoginChecking/>
         },
         {
             path: "/CreateAccount",

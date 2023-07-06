@@ -37,14 +37,12 @@ export const LogIn = () => {
 
             localStorage.setItem(`Client`, JSON.stringify(data.Account));
             localStorage.setItem(`Token`, JSON.stringify(data.Token));
-            console.log(data.Account);
 
             setUsername("");
             setPassword("");
             navigate('/LogIn/SearchRecipes');
         })
         .catch((error) => {
-            console.log(error);
             toast.error("An error occured. Please try again")
         });
     }

@@ -44,7 +44,6 @@ export const SubmitRecipe = () => {
             setServings("");
         })
         .catch((error) => {
-            console.log(error);
             toast.error("An error occured. Please try again")
         });
     }

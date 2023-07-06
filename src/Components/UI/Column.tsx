@@ -3,9 +3,9 @@ import { Draggable } from 'react-beautiful-dnd';
 import { Droppable } from "react-beautiful-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark} from "@fortawesome/free-solid-svg-icons";
-import {ColumnModel} from "../Models/ColumnModel";
+import {ColumnModel} from "../../Models/ColumnModel";
 import {MouseEvent, useState} from 'react';
-import { ClientRecipe} from "../Models/RecipeModel";
+import { ClientRecipe} from "../../Models/RecipeModel";
 import { Button, Modal } from "react-bootstrap";
 import { Ingredients } from "./Ingredients";
 import { Instructions } from "./Instructions";
@@ -24,7 +24,6 @@ const Column : React.FC<Props> =  ({ column, recipes, onDelete }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean | undefined>(false);
   const [currentRecipe, setCurrentRecipe] = useState<ClientRecipe>();
   const openModal = (event: MouseEvent, recipe : ClientRecipe) => {
-    console.log(recipe.title);
     setIsModalOpen(true);
     setCurrentRecipe(recipe);
   };
