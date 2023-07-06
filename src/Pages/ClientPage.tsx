@@ -264,7 +264,7 @@ function ClientNavBar() {
                 key={r.id}
                 recipeId={parseInt(r.id)}
                 header={r.title}
-                date="June 22, 2023"
+                date="July 6, 2023"
                 paragraph={r.servings}
                 ingredients={r.ingredients}
                 instructions={r.instructions}
